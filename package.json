@@ -2,7 +2,9 @@
   "name": "@student-calendar/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "serve:web": "nx run student-calendar:serve"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~17.2.0",
@@ -10,6 +12,7 @@
     "@angular/common": "~17.2.0",
     "@angular/compiler": "~17.2.0",
     "@angular/core": "~17.2.0",
+    "@angular/fire": "^17.0.1",
     "@angular/forms": "~17.2.0",
     "@angular/material": "~17.3.0",
     "@angular/platform-browser": "~17.2.0",

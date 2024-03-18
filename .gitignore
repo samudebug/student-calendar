@@ -41,3 +41,8 @@ Thumbs.db
 .nx/cache
 .angular
 .env
+
+# Firebase
+.firebase
+*-debug.log
+.runtimeconfig.json

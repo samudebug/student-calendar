@@ -1,0 +1,30 @@
+<mat-card class="rounded-md">
+  <mat-card-content>
+    <div class="flex flex-row ">
+      <div class="w-1/2 flex items-center justify-center">
+        <span class="text-lg font-bold uppercase">Login</span>
+      </div>
+      <div class="w-1/2 flex flex-col items-center justify-center p-3 gap-y-2">
+        <span class="font-semibold capitalize">Login with your account</span>
+        <form [formGroup]="loginForm" class="flex flex-col gap-y-2 w-full" (submit)="onSubmit()">
+          <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="Email" />
+            @if (loginForm.get('email')?.invalid){
+              <mat-error>This email is invalid!</mat-error>
+            }
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" placeholder="Password" />
+            @if (loginForm.get('password')?.invalid){
+              <mat-error>This password is invalid!</mat-error>
+            }
+          </mat-form-field>
+          <button mat-raised-button color="primary">Login</button>
+        </form>
+        <span>You don't have an account? <a routerLink="/register" class="text-indigo-400">Register now!</a></span>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
