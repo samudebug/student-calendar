@@ -7,6 +7,7 @@ import {
   User,
   AuthErrorCodes,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -85,5 +86,9 @@ export class AuthService {
 
   async logout() {
     await signOut(this.auth);
+  }
+
+  async sendResetPasswordEmail(email: string) {
+    await sendPasswordResetEmail(this.auth,email);
   }
 }
