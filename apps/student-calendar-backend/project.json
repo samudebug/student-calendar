@@ -1,0 +1,31 @@
+{
+  "name": "student-calendar-backend",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/student-calendar-backend/src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "student-calendar-backend:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "student-calendar-backend:build:development"
+        },
+        "production": {
+          "buildTarget": "student-calendar-backend:build:production"
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/student-calendar-backend/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
