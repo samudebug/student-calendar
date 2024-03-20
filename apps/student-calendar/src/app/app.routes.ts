@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
 export const appRoutes: Route[] = [
@@ -16,10 +17,9 @@ export const appRoutes: Route[] = [
       ),
   },
   {
-    path: 'classes',
-    loadComponent: () =>
-      import('./classes/classes.component').then((mod) => mod.ClassesComponent),
-    canActivate: [AuthGuard],
-    data: { authGuardPipe: redirectUnauthorizedToLogin },
+    path: '',
+    component: DashboardComponent,
+    loadChildren: () =>
+      import('./dashboard/dashboard.routes').then((mod) => mod.dashboardRoutes),
   },
 ];

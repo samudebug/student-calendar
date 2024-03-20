@@ -8,10 +8,11 @@ import {
   AuthErrorCodes,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { signInWithEmailAndPassword, updateProfile, getIdToken } from 'firebase/auth';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -90,5 +91,11 @@ export class AuthService {
 
   async sendResetPasswordEmail(email: string) {
     await sendPasswordResetEmail(this.auth,email);
+  }
+
+  async fetchIdToken() {
+    const user = await firstValueFrom(this.user$);
+    if (!user) return;
+    return getIdToken(user);
   }
 }
