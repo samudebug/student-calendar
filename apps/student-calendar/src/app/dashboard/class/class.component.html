@@ -1,0 +1,14 @@
+<div class="h-full w-full flex flex-col p-3">
+  <div class="flex flex-row justify-between">
+    <h2 class="font-semibold">{{ class?.name }}</h2>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="openDelete()">
+        <mat-icon>delete</mat-icon>
+        <span>Delete</span>
+      </button>
+    </mat-menu>
+  </div>
+</div>

@@ -18,4 +18,23 @@ export class ClassesService {
     const classes = await this.api.get<Class[]>('/classes', {authorization: token})
     this.classesSubject.next(classes);
   }
+
+  async createClass(body: {name: string}) {
+    const token = await this.authService.fetchIdToken();
+    if (!token) throw new Error("User not logged in");
+    await this.api.post('/classes', body, {authorization: token});
+    this.getClasses();
+  }
+
+  async getClass(id: string) {
+    const token = await this.authService.fetchIdToken();
+    if (!token) throw new Error('User not logged in');
+    return this.api.get<Class>(`/classes/${id}`, {authorization: token});
+  }
+
+  async deleteClass(id:string) {
+    const token = await this.authService.fetchIdToken();
+    if (!token) throw new Error('User not logged in');
+    return this.api.delete(`/classes/${id}`, {authorization: token});
+  }
 }

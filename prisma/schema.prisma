@@ -28,5 +28,5 @@ model Student {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userId String
   classId String @db.ObjectId
-  class Class @relation(fields: [classId], references: [id])
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
 }

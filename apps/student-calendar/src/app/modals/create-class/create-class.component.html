@@ -1,0 +1,13 @@
+<div class="p-3 flex flex-col items-center justify-center gap-y-2">
+  <span class="font-bold text-lg">Enter a name to create a new class</span>
+  <form class="flex flex-col gap-y-2" (submit)="$event.preventDefault();onSubmit()">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input type="text" matInput placeholder="Name" [formControl]="nameField"/>
+      @if (nameField.invalid) {
+        <mat-error>A name is required</mat-error>
+      }
+    </mat-form-field>
+    <button  mat-raised-button color="primary" [disabled]="loading">Create Class</button>
+  </form>
+</div>

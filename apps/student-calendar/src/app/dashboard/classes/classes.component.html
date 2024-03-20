@@ -1,6 +1,11 @@
 <div class="p-3 flex flex-row gap-x-2 flex-1 h-full">
   <div class="w-1/2 flex flex-col">
-    <h1 class="text-2xl font-bold">Your Classes</h1>
+    <div class="flex flex-row justify-between">
+      <h1 class="text-2xl font-bold">Your Classes</h1>
+      <button mat-icon-button (click)="openCreateClass()">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
     <div class="flex-1">
       @if (loading) {
       <div class="h-full flex items-center justify-center">
@@ -10,7 +15,7 @@
 
       <mat-list>
         @for(classObject of (classes$ | async); track classObject) {
-        <mat-list-item class="cursor-pointer">
+        <mat-list-item class="cursor-pointer" [routerLink]="['/','classes', classObject.id]">
           <mat-icon matListItemIcon>people</mat-icon>
           <div matListItemTitle>{{ classObject.name }}</div>
         </mat-list-item>
