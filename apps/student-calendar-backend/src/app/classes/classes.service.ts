@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { IClassesRepository } from './repository/IClassesRepository';
-import { Class } from '@prisma/client';
+import { Class, Student } from '@prisma/client';
 import * as crypto from 'crypto';
 import { auth } from 'firebase-admin';
 
@@ -12,7 +12,7 @@ export class ClassesService {
     return this.classesRepository.getByUser(createdBy);
   }
 
-  async getById(id: string): Promise<Class> {
+  async getById(id: string): Promise<Class & {students: Student[]}> {
     return this.classesRepository.getById(id);
   }
 
@@ -51,6 +51,10 @@ export class ClassesService {
     const currentClass = await this.getById(id);
     if (currentClass.createdBy !== userId) throw new UnauthorizedException();
     return this.classesRepository.deleteById(id);
+  }
+
+  async removeStudentFromClass(classId: string, userId: string,studentId: string) {
+    return this.classesRepository.removeStudentFromClass(classId, userId, studentId);
   }
 
   async useInviteCode(code: string, userId: string) {

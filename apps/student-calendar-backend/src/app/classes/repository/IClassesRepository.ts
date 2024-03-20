@@ -2,7 +2,7 @@ import { Class, Student } from "@prisma/client";
 
 export abstract class IClassesRepository {
   abstract getByUser(createdBy: string): Promise<Class[]>;
-  abstract getById(id: string): Promise<Class>;
+  abstract getById(id: string): Promise<Class & {students: Student[]}>;
   abstract getByCode(code: string): Promise<Class & {students: Student[]}>;
   abstract addStudentToClass(classId: string, student: {userId: string, name: string, photoUrl: string});
   abstract add(
@@ -18,4 +18,5 @@ export abstract class IClassesRepository {
     >>
   );
   abstract deleteById(id: string): Promise<boolean>;
+  abstract removeStudentFromClass(classId: string, userId: string, studentId: string): Promise<boolean>;
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../api/api.service';
 import { BehaviorSubject } from 'rxjs';
-import { Class } from '@prisma/client';
+import { Class, Student } from '@prisma/client';
 import { AuthService } from '../auth/auth.service';
 @Injectable({
   providedIn: 'root',
@@ -23,7 +23,7 @@ export class ClassesService {
   }
 
   async getClass(id: string) {
-    return this.api.get<Class>(`/classes/${id}`);
+    return this.api.get<Class & {students: Student[]}>(`/classes/${id}`);
   }
 
   async deleteClass(id: string) {
@@ -32,5 +32,9 @@ export class ClassesService {
 
   async joinClass(code: string) {
     return this.api.get<Class>(`/classes/invite/${code}`);
+  }
+
+  async removeStudentFromClass(classId: string, studentId: string) {
+    return this.api.delete(`/classes/${classId}/students/${studentId}`);
   }
 }

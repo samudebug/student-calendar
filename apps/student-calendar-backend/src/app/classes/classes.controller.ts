@@ -49,7 +49,13 @@ export class ClassesController {
   }
 
   @Delete(':id')
-  DeleteQueryBuilder(@Param('id') id: string, @UserId() userId: string) {
+  delete(@Param('id') id: string, @UserId() userId: string) {
     return this.classesService.deleteById(id, userId);
   }
+
+  @Delete(':id/students/:studentId')
+  removeStudentFromClass(@Param('id') id: string, @Param('studentId') studentId: string, @UserId() userId: string) {
+    return this.classesService.removeStudentFromClass(id, userId, studentId);
+  }
+
 }

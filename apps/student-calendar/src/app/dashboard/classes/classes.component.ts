@@ -10,26 +10,37 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CreateClassComponent } from '../../modals/create-class/create-class.component';
 import { RouterModule } from '@angular/router';
 import { JoinOrCreateComponent } from '../../modals/join-or-create/join-or-create.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-classes',
   standalone: true,
-  imports: [CommonModule, TopBarComponent, RouterModule, MatListModule, MatIconModule, MatProgressSpinnerModule, MatButtonModule, MatDialogModule],
+  imports: [
+    CommonModule,
+    TopBarComponent,
+    RouterModule,
+    MatListModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatTooltipModule,
+  ],
   templateUrl: './classes.component.html',
   styleUrl: './classes.component.css',
 })
 export class ClassesComponent implements OnInit {
   loading = true;
   classes$ = this.classesService.classes$;
-  constructor(private classesService: ClassesService, private dialog: MatDialog) {
-
-  }
+  constructor(
+    private classesService: ClassesService,
+    private dialog: MatDialog
+  ) {}
   ngOnInit(): void {
-    this.classesService.getClasses().then(() => this.loading = false);
+    this.classesService.getClasses().then(() => (this.loading = false));
   }
 
-  openCreateClass() {
+  openJoinOrCreateClass() {
     this.dialog.open(JoinOrCreateComponent);
   }
-
 }

@@ -4,6 +4,14 @@ import { PrismaService } from '../../prisma.service';
 
 export class ClassRepositoryMongo implements IClassesRepository {
   constructor(private prismaService: PrismaService) {}
+  async removeStudentFromClass(classId: string, userId: string,  studentId: string): Promise<boolean> {
+    return !!(await this.prismaService.student.deleteMany({
+      where: {
+        classId,
+        userId: studentId
+      }
+    }))
+  }
   getByCode(code: string): Promise<Class & {students: Student[]}> {
     return this.prismaService.class.findUnique({
       where: {
@@ -95,11 +103,14 @@ export class ClassRepositoryMongo implements IClassesRepository {
       },
     });
   }
-  getById(id: string): Promise<Class> {
+  getById(id: string): Promise<Class & {students: Student[]}> {
     return this.prismaService.class.findFirst({
       where: {
         id,
       },
+      include: {
+        students: true
+      }
     });
   }
 }
