@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { CreateClassComponent } from '../../modals/create-class/create-class.component';
 import { RouterModule } from '@angular/router';
+import { JoinOrCreateComponent } from '../../modals/join-or-create/join-or-create.component';
 
 @Component({
   selector: 'app-classes',
@@ -28,7 +29,7 @@ export class ClassesComponent implements OnInit {
   }
 
   openCreateClass() {
-    this.dialog.open(CreateClassComponent);
+    this.dialog.open(JoinOrCreateComponent);
   }
 
 }

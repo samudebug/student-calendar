@@ -1,5 +1,5 @@
-<div class="flex flex-row gap-x-2 hover:bg-indigo-500 rounded-md p-3" *ngIf="user$" [matMenuTriggerFor]="menu">
-  <img [src]="(user$ | async)?.photoURL" class="h-4 w-4 rounded-full">
+<div class="flex flex-row gap-x-2 hover:bg-indigo-500 rounded-md p-3 items-center cursor-pointer" *ngIf="user$" [matMenuTriggerFor]="menu">
+  <img [src]="(user$ | async)?.photoURL" class="h-10 w-10 rounded-full">
   <span class="text-sm font-semibold">{{ (user$ | async)?.displayName }}</span>
 </div>
 <mat-menu #menu="matMenu">

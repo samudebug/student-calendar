@@ -1,13 +1,41 @@
+import { Class, Student } from '@prisma/client';
+import { IClassesRepository } from './IClassesRepository';
+import { PrismaService } from '../../prisma.service';
 
-import { Class } from "@prisma/client";
-import { IClassesRepository } from "./IClassesRepository";
-import { PrismaService } from "../../prisma.service";
-
-export class ClassRepositoryMongo
-  implements IClassesRepository
-{
-  constructor(private prismaService: PrismaService) {
-
+export class ClassRepositoryMongo implements IClassesRepository {
+  constructor(private prismaService: PrismaService) {}
+  getByCode(code: string): Promise<Class & {students: Student[]}> {
+    return this.prismaService.class.findUnique({
+      where: {
+        code,
+      },
+      include: {
+        students: true
+      }
+    });
+  }
+  addStudentToClass(
+    classId: string,
+    {
+      userId,
+      name,
+      photoUrl,
+    }: { userId: string; name: string; photoUrl: string }
+  ) {
+    return this.prismaService.class.update({
+      where: {
+        id: classId,
+      },
+      data: {
+        students: {
+          create: {
+            userId,
+            name,
+            photoUrl,
+          },
+        },
+      },
+    });
   }
   async deleteById(id: string): Promise<boolean> {
     return !!(await this.prismaService.class.delete({
@@ -16,7 +44,14 @@ export class ClassRepositoryMongo
       },
     }));
   }
-  add({name, code, createdBy}: Omit<Class, 'id' | 'createdAt' | 'updatedAt'>): Promise<Class> {
+  add(
+    { name, code, createdBy }: Omit<Class, 'id' | 'createdAt' | 'updatedAt'>,
+    {
+      userId,
+      name: userName,
+      photoUrl,
+    }: { userId: string; name: string; photoUrl: string }
+  ): Promise<Class> {
     return this.prismaService.class.create({
       data: {
         name,
@@ -24,43 +59,47 @@ export class ClassRepositoryMongo
         createdBy,
         students: {
           create: {
-            userId: createdBy
-          }
-        }
-      }
-    })
+            userId: userId,
+            name: userName,
+            photoUrl: photoUrl,
+          },
+        },
+      },
+    });
   }
   updateById(
     id: string,
     userId: string,
-    {name}: Omit<Class, 'id' | 'createdAt' | 'updateAt' | 'code' | 'createdBy'>
+    {
+      name,
+    }: Omit<Class, 'id' | 'createdAt' | 'updateAt' | 'code' | 'createdBy'>
   ) {
     return this.prismaService.class.update({
       where: {
         id,
-        createdBy: userId
+        createdBy: userId,
       },
       data: {
-        name
-      }
-    })
+        name,
+      },
+    });
   }
   getByUser(userId: string): Promise<Class[]> {
     return this.prismaService.class.findMany({
       where: {
         students: {
           some: {
-            userId
-          }
-        }
-      }
-    })
+            userId,
+          },
+        },
+      },
+    });
   }
   getById(id: string): Promise<Class> {
     return this.prismaService.class.findFirst({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 }

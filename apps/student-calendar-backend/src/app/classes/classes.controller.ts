@@ -14,6 +14,11 @@ export class ClassesController {
     return this.classesService.getByUser(userId);
   }
 
+  @Get('invite/:code')
+  addStudentToClass(@UserId() userId: string, @Param('code') code: string) {
+    return this.classesService.useInviteCode(code, userId);
+  }
+
   @Get(':id')
   getUserById(@Param('id') id: string) {
     return this.classesService.getById(id);

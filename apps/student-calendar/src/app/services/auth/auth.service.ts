@@ -8,7 +8,8 @@ import {
   AuthErrorCodes,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-
+  signInWithPopup,
+  GoogleAuthProvider
 } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -32,6 +33,11 @@ export class AuthService {
       }
       return this.router.navigate(['/login']);
     });
+  }
+
+  async loginWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(this.auth, provider);
   }
 
   async login(email: string, password: string) {

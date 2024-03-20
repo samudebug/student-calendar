@@ -1,13 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { IClassesRepository } from './repository/IClassesRepository';
 import { Class } from '@prisma/client';
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
+import { auth } from 'firebase-admin';
 
 @Injectable()
 export class ClassesService {
-  constructor(private classesRepository: IClassesRepository) {
-
-  }
+  constructor(private classesRepository: IClassesRepository) {}
 
   async getByUser(createdBy: string): Promise<Class[]> {
     return this.classesRepository.getByUser(createdBy);
@@ -17,12 +16,32 @@ export class ClassesService {
     return this.classesRepository.getById(id);
   }
 
-  async add(userId: string, newClass: Omit<Class, 'id' | 'createdAt' | 'updatedAt' | 'code' | 'createdBy'>): Promise<Class> {
+  async add(
+    userId: string,
+    newClass: Omit<
+      Class,
+      'id' | 'createdAt' | 'updatedAt' | 'code' | 'createdBy'
+    >
+  ): Promise<Class> {
     const code = this.generateCode();
-    return this.classesRepository.add({...newClass, code, createdBy: userId});
+    const user = await auth().getUser(userId);
+    return this.classesRepository.add(
+      { ...newClass, code, createdBy: userId },
+      {
+        userId: user.uid,
+        name: user.displayName ?? '',
+        photoUrl: user.photoURL ?? '',
+      }
+    );
   }
 
-  async updateById(id: string, userId: string, classToUpdate: Partial<Omit<Class, 'id' | 'createdAt' | 'updatedAt' | 'code' | 'createdBy'>>): Promise<Class> {
+  async updateById(
+    id: string,
+    userId: string,
+    classToUpdate: Partial<
+      Omit<Class, 'id' | 'createdAt' | 'updatedAt' | 'code' | 'createdBy'>
+    >
+  ): Promise<Class> {
     const currentClass = await this.getById(id);
     if (currentClass.createdBy !== userId) throw new UnauthorizedException();
     return this.classesRepository.updateById(id, userId, classToUpdate);
@@ -34,7 +53,16 @@ export class ClassesService {
     return this.classesRepository.deleteById(id);
   }
 
+  async useInviteCode(code: string, userId: string) {
+    const user = await auth().getUser(userId);
+    const currentClass = await this.classesRepository.getByCode(code);
+    if (!currentClass) throw new NotFoundException();
+    const isStudentInClass = currentClass.students.some((el) => el.userId === userId);
+    if (isStudentInClass) return currentClass;
+    return await this.classesRepository.addStudentToClass(currentClass.id, {userId, name: user.displayName ?? "", photoUrl: user.photoURL ?? ""});
+  }
+
   private generateCode() {
-    return crypto.randomBytes(6).toString('hex').slice(0,5).toUpperCase();
+    return crypto.randomBytes(6).toString('hex').slice(0, 5).toUpperCase();
   }
 }

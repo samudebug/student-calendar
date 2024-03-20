@@ -4,37 +4,33 @@ import { BehaviorSubject } from 'rxjs';
 import { Class } from '@prisma/client';
 import { AuthService } from '../auth/auth.service';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ClassesService {
   classesSubject = new BehaviorSubject<Class[]>([]);
   classes$ = this.classesSubject.asObservable();
 
-  constructor(private api: ApiService, private authService: AuthService) { }
+  constructor(private api: ApiService) {}
 
   async getClasses() {
-    const token = await this.authService.fetchIdToken();
-    if (!token) throw new Error("User not logged in");
-    const classes = await this.api.get<Class[]>('/classes', {authorization: token})
+    const classes = await this.api.get<Class[]>('/classes');
     this.classesSubject.next(classes);
   }
 
-  async createClass(body: {name: string}) {
-    const token = await this.authService.fetchIdToken();
-    if (!token) throw new Error("User not logged in");
-    await this.api.post('/classes', body, {authorization: token});
+  async createClass(body: { name: string }) {
+    await this.api.post('/classes', body);
     this.getClasses();
   }
 
   async getClass(id: string) {
-    const token = await this.authService.fetchIdToken();
-    if (!token) throw new Error('User not logged in');
-    return this.api.get<Class>(`/classes/${id}`, {authorization: token});
+    return this.api.get<Class>(`/classes/${id}`);
   }
 
-  async deleteClass(id:string) {
-    const token = await this.authService.fetchIdToken();
-    if (!token) throw new Error('User not logged in');
-    return this.api.delete(`/classes/${id}`, {authorization: token});
+  async deleteClass(id: string) {
+    return this.api.delete(`/classes/${id}`);
+  }
+
+  async joinClass(code: string) {
+    return this.api.get<Class>(`/classes/invite/${code}`);
   }
 }

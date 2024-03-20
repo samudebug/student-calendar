@@ -16,7 +16,7 @@ datasource db {
 model Class {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  code String
+  code String @unique
   createdBy String
   students Student[]
 
@@ -27,6 +27,8 @@ model Class {
 model Student {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   userId String
+  name String
+  photoUrl String
   classId String @db.ObjectId
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
 }

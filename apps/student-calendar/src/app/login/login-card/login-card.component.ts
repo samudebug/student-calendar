@@ -45,4 +45,8 @@ export class LoginCardComponent {
   async openForgotPassword() {
     this.dialog.open(ForgotPasswordComponent)
   }
+
+  loginWithGoogle() {
+    this.authService.loginWithGoogle();
+  }
 }
