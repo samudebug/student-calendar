@@ -19,6 +19,7 @@ model Class {
   code String @unique
   createdBy String
   students Student[]
+  tasks Task[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -26,9 +27,27 @@ model Class {
 
 model Student {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String
+  userId String @unique
   name String
   photoUrl String
   classId String @db.ObjectId
   class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  tasks Task[]
+}
+
+model Task {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  notes String
+  deliverDate DateTime
+
+  createdBy String @db.ObjectId
+  student Student @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  classId String @db.ObjectId
+  class Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
 }
