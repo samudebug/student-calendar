@@ -9,7 +9,11 @@ import { Router } from '@angular/router';
 })
 export class ApiService {
   private baseUrl = 'http://localhost:3000/api';
-  constructor(private http: HttpClient, private authService: AuthService, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   /**
    *
@@ -17,9 +21,14 @@ export class ApiService {
    * @param {[header: string]: string} headers A Map of the headers to send on the request
    * @returns An instance of `T`. Throws an error otherwise
    */
-  async get<T>(url: string, headers?: { [header: string]: string }): Promise<T> {
+  async get<T>(
+    url: string,
+    headers?: { [header: string]: string }
+  ): Promise<T> {
     return firstValueFrom(
-      this.http.get<T>(`${this.baseUrl}${url}`, { headers: {...headers, ...(await this.getHeaders())} })
+      this.http.get<T>(`${this.baseUrl}${url}`, {
+        headers: { ...headers, ...(await this.getHeaders()) },
+      })
     );
   }
 
@@ -49,9 +58,32 @@ export class ApiService {
    * @param {[header: string]: string} headers A Map of the headers to send on the request
    * @returns An instance of `T`. Throws an error otherwise
    */
-  async delete<T>(url: string, headers?: { [header: string]: string }): Promise<T> {
+  async delete<T>(
+    url: string,
+    headers?: { [header: string]: string }
+  ): Promise<T> {
     return firstValueFrom(
       this.http.delete<T>(`${this.baseUrl}${url}`, {
+        headers: { ...headers, ...(await this.getHeaders()) },
+      })
+    );
+  }
+
+  /**
+   *
+   * @param url The URL to perform the request. It will be appended to the baseUrl
+   * @param body The body of the request. It will be sent as a JSON
+   * @param headers A Map of the headers to send on the request
+   * @returns An instance of `T`. Throws an error otherwise
+   */
+
+  async patch<T>(
+    url: string,
+    body: Record<string, any>,
+    headers?: Record<string, any>
+  ): Promise<T> {
+    return firstValueFrom(
+      this.http.patch<T>(`${this.baseUrl}${url}`, body, {
         headers: { ...headers, ...(await this.getHeaders()) },
       })
     );
@@ -63,6 +95,6 @@ export class ApiService {
       this.router.navigate(['/', 'login']);
       return;
     }
-    return {authorization: token};
+    return { authorization: token };
   }
 }

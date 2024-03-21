@@ -10,20 +10,27 @@ import { DeleteClassComponent } from '../../modals/delete-class/delete-class.com
 import { StudentListComponent } from '../student-list/student-list.component';
 import { AuthService } from '../../services/auth/auth.service';
 import { firstValueFrom } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-class',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+  ],
   templateUrl: './class.component.html',
   styleUrl: './class.component.css',
 })
 export class ClassComponent {
-  class: Class & {students: Student[]};
+  class: Class & { students: Student[] };
   @Input()
-  set id(classId: string) {
+  set classId(classId: string) {
     this.setClass(classId);
   }
 
@@ -50,15 +57,23 @@ export class ClassComponent {
         students: this.class.students,
         canRemoveStudents: this.class.createdBy === user?.uid,
         userId: user?.uid,
-        classId: this.class.id
+        classId: this.class.id,
       },
     });
     dialogRef.afterClosed().subscribe(() => {
       this.setClass(this.class.id);
-    })
+    });
   }
 
   goBack() {
     this.router.navigate(['/', 'classes']);
+  }
+
+  get inviteUrl() {
+    return `http://localhost:4200/classes/invite/${this.class.code}`;
+  }
+
+  copy(text: string) {
+    navigator.clipboard.writeText(text);
   }
 }

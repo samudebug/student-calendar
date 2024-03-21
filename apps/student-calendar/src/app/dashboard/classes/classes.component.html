@@ -15,7 +15,7 @@
 
       <mat-list>
         @for(classObject of (classes$ | async); track classObject) {
-        <mat-list-item class="cursor-pointer" [routerLink]="['/','classes', classObject.id]">
+        <mat-list-item class="cursor-pointer" [routerLink]="['/','classes', classObject.id, 'tasks']">
           <mat-icon matListItemIcon>people</mat-icon>
           <div matListItemTitle>{{ classObject.name }}</div>
         </mat-list-item>

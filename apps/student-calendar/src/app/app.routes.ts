@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { AuthGuard, redirectUnauthorizedTo, canActivate } from '@angular/fire/auth-guard';
 import { DashboardComponent } from './dashboard/dashboard.component';
 const redirectUnauthorizedToLogin = () => redirectUnauthorizedTo(['login']);
 
@@ -19,6 +19,7 @@ export const appRoutes: Route[] = [
   {
     path: '',
     component: DashboardComponent,
+    ...canActivate(redirectUnauthorizedToLogin),
     loadChildren: () =>
       import('./dashboard/dashboard.routes').then((mod) => mod.dashboardRoutes),
   },

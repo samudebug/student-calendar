@@ -6,6 +6,31 @@
       </button>
       <h2 class="font-semibold">{{ class?.name }}</h2>
     </div>
+    <div class="flex flex-row gap-x-2 items-center">
+      <span>Add Students with the code</span>
+      <div class="flex flex-row gap-x-2 items-center">
+        <span class="font-semibold">{{ class?.code }}</span>
+        <button
+          mat-icon-button
+          type="button"
+          matTooltip="Copy Code"
+          (click)="copy(class.code)"
+        >
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </div>
+      <span>Or</span>
+      <div
+        class="flex flex-row gap-x-2 items-center cursor-pointer"
+        (click)="copy(inviteUrl)"
+        matTooltip="Copy URL"
+      >
+        <span class="font-semibold underline">Copy the link</span>
+        <button mat-icon-button type="button" >
+          <mat-icon>link</mat-icon>
+        </button>
+      </div>
+    </div>
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>more_vert</mat-icon>
     </button>
@@ -20,4 +45,5 @@
       </button>
     </mat-menu>
   </div>
+  <router-outlet></router-outlet>
 </div>

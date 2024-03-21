@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ITasksRepository } from './repository/ITasksRepository';
-import { Task } from '@prisma/client';
+import { Student, Task } from '@prisma/client';
 import { ClassesService } from '../classes/classes.service';
 import { StudentsService } from '../students/students.service';
 
@@ -20,7 +20,7 @@ export class TasksService {
     return this.repo.getTasksForClass(classId);
   }
 
-  async getById(id: string): Promise<Task> {
+  async getById(id: string): Promise<Task & {student: Student}> {
     return this.repo.getById(id);
   }
 
@@ -62,7 +62,7 @@ export class TasksService {
       throw new UnauthorizedException('Student is not in class');
     if (currentTask.createdBy !== student.id)
       throw new UnauthorizedException('User cannot update this task');
-    return this.repo.update(id, classId, userId, taskToUpdate);
+    return this.repo.update(id, classId, student.id, taskToUpdate);
   }
 
   async delete(id: string, userId: string) {

@@ -1,4 +1,5 @@
 import { Route } from "@angular/router";
+import { ClassComponent } from "./class/class.component";
 
 export const dashboardRoutes: Route[] = [
   {
@@ -10,7 +11,8 @@ export const dashboardRoutes: Route[] = [
     loadComponent: () => import('./join-class/join-class-page.component').then((mod) => mod.JoinClassPageComponent),
   },
   {
-    path: 'classes/:id',
-    loadComponent: () => import('./class/class.component').then((mod) => mod.ClassComponent),
+    path: 'classes/:classId',
+    component: ClassComponent,
+    loadChildren: () => import('./class/class.routes').then(mod => mod.classRoutes),
   }
 ]

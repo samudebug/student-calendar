@@ -1,0 +1,24 @@
+<div class="flex flex-col gap-y-2">
+  <div class="flex flex-row items-center justify-between">
+    <h2 class="text-2xl font-bold">Tasks</h2>
+    <button
+      mat-icon-button
+      type="button"
+      matTooltip="Add Task"
+      (click)="openCreate()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div class="grid grid-cols-5 gap-4">
+    @for (task of (tasks$ | async); track task) {
+    <app-task-element
+      class="cursor-pointer"
+      (click)="openView(task.id)"
+      [name]="task.name"
+      [date]="task.deliverDate"
+      [notes]="task.notes"
+    />
+    }
+  </div>
+</div>

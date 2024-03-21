@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-import { Task } from '@prisma/client';
+import { Student, Task } from '@prisma/client';
 import { UserId } from '../../decorators/userId.decorator';
+import { AuthGuard } from '../../guards/auth/auth.guard';
 
 @Controller('classes/:classId/tasks')
+@UseGuards(AuthGuard)
 export class TasksController {
   constructor(private taskService: TasksService) {}
   @Get()
@@ -12,7 +14,7 @@ export class TasksController {
   }
 
   @Get(':id')
-  async getById(@Param('id') id: string): Promise<Task> {
+  async getById(@Param('id') id: string): Promise<Task & {student: Student}> {
     return this.taskService.getById(id);
   }
 

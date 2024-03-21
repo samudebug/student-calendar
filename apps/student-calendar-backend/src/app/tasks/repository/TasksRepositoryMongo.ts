@@ -1,4 +1,4 @@
-import { Task } from "@prisma/client";
+import { Student, Task } from "@prisma/client";
 import { PrismaService } from "../../prisma.service";
 import { ITasksRepository } from "./ITasksRepository";
 
@@ -13,10 +13,13 @@ export class TasksRepositoryMongo implements ITasksRepository {
       }
     })
   }
-  getById(id: string): Promise<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }> {
+  getById(id: string): Promise<Task & {student: Student}> {
     return this.prismaService.task.findFirst({
       where: {
         id
+      },
+      include: {
+        student: true
       }
     })
   }

@@ -1,0 +1,86 @@
+<div class="p-3 flex flex-col items-center justify-center gap-y-2 w-full">
+  <div class="flex flex-row justify-between items-center w-full">
+    <h2 mat-dialog-title>{{ !!data.task ? data.task.name : 'Create Task' }}</h2>
+    @if (data.canEditTask && !!data.task) {
+      <div class="flex flex-row gap-x-2">
+      <button mat-icon-button matTooltip="Edit" (click)="isEditing = !isEditing">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Delete" color="warn">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    }
+  </div>
+  <mat-dialog-content class="w-full">
+    @if (isEditing || !data.task) {
+      <form
+      class="flex flex-col gap-y-2 w-full"
+      [formGroup]="taskForm"
+      (submit)="$event.preventDefault(); onSubmit()"
+    >
+      <div class="flex flex-row gap-x-2">
+        <mat-form-field class="w-1/2">
+          <mat-label>Name</mat-label>
+          <input
+            type="text"
+            matInput
+            placeholder="Name"
+            formControlName="name"
+          />
+          @if (taskForm.get('name')?.invalid) {
+          <mat-error>This field is required</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="w-1/2">
+          <mat-label>Deliver Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="deliverDate"
+          />
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          @if (taskForm.get('deliverDate')?.invalid) {
+          <mat-error>This field is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <mat-form-field class="w-full">
+        <mat-label>Extra Notes</mat-label>
+        <textarea
+          style="resize: none"
+          matInput
+          formControlName="notes"
+          placeholder="Extra notes"
+        ></textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" [disabled]="loading">
+        {{ isEditing ? "Save Task" : "Create Task" }}
+      </button>
+    </form>
+    }
+    @if (!isEditing && !!data.task) {
+      <div class="flex flex-col gap-y-2 w-full">
+        <div class="flex flex-row gap-x-2 w-full">
+          <div class="w-1/2 flex flex-col gap-y-2">
+            <span class="font-lg font-semibold">Name</span>
+            <span>{{ data.task.name }}</span>
+          </div>
+          <div class="w-1/2 flex flex-col gap-y-2">
+            <span class="font-lg font-semibold">Deliver Date</span>
+            <span>{{ data.task.deliverDate | date }}</span>
+          </div>
+        </div>
+        <div class="w-full flex flex-col gap-y-2">
+            <span class="font-lg font-semibold">Notes</span>
+            <p class="text-sm">{{ data.task.notes }}</p>
+        </div>
+      </div>
+    }
+  </mat-dialog-content>
+</div>
