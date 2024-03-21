@@ -20,7 +20,7 @@ export class TasksService {
     return this.repo.getTasksForClass(classId);
   }
 
-  async getById(id: string): Promise<Task & {student: Student}> {
+  async getById(id: string): Promise<Task & { student: Student }> {
     return this.repo.getById(id);
   }
 
@@ -66,6 +66,10 @@ export class TasksService {
   }
 
   async delete(id: string, userId: string) {
-    return this.repo.deleteById(id, userId);
+    const student = await this.studentService.getStudentByUserId(userId);
+    const currentTask = await this.getById(id);
+    if (currentTask.createdBy !== student.id)
+      throw new UnauthorizedException('User cannot delete this task');
+    return this.repo.deleteById(id, student.id);
   }
 }

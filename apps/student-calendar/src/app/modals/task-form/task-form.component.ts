@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
@@ -14,6 +15,7 @@ import { TasksService } from '../../services/tasks/tasks.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Task } from '@prisma/client';
+import { DeleteTaskComponent } from '../delete-task/delete-task.component';
 @Component({
   selector: 'app-task-form',
   standalone: true,
@@ -44,7 +46,8 @@ export class TaskFormComponent implements OnInit {
     private dialogRef: MatDialogRef<TaskFormComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { classId: string; canEditTask?: boolean; task?: Task },
-    private taskService: TasksService
+    private taskService: TasksService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -86,5 +89,11 @@ export class TaskFormComponent implements OnInit {
       this.loading = false;
       this.taskForm.enable();
     }
+  }
+
+  async openDelete() {
+    this.dialog.open(DeleteTaskComponent, {
+      data: { classId: this.data.classId, taskId: this.data.task?.id },
+    });
   }
 }
