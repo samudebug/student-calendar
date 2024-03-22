@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { environment } from '../../../assets/environments/envinroment';
 
 @Component({
   selector: 'app-class',
@@ -70,7 +71,7 @@ export class ClassComponent {
   }
 
   get inviteUrl() {
-    return `http://localhost:4200/classes/invite/${this.class.code}`;
+    return `${environment.baseurl}/classes/invite/${this.class.code}`;
   }
 
   copy(text: string) {

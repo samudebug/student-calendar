@@ -28,21 +28,20 @@ export class AuthService {
     private snackBar: MatSnackBar
   ) {
     authState(auth).subscribe((user: User | null) => {
-      if (user) {
-        return this.router.navigate(['classes']);
-      }
-      return this.router.navigate(['/login']);
+      if (!user) this.router.navigate(['/login']);
     });
   }
 
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(this.auth, provider);
+    this.router.navigate(['/', 'classes'])
   }
 
   async login(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
+      this.router.navigate(['/', 'classes']);
     } catch (error: any) {
       const errorCode = error.code;
       if (errorCode === AuthErrorCodes.INVALID_EMAIL) {
@@ -67,6 +66,7 @@ export class AuthService {
       const user = await firstValueFrom(this.user$);
       if (!user) return;
       await updateProfile(user, { displayName: name });
+      this.router.navigate(['/', 'classes']);
     } catch (error: any) {
       const errorCode = error.code;
       if (errorCode === AuthErrorCodes.INVALID_EMAIL) {
@@ -96,7 +96,7 @@ export class AuthService {
   }
 
   async sendResetPasswordEmail(email: string) {
-    await sendPasswordResetEmail(this.auth,email);
+    await sendPasswordResetEmail(this.auth, email);
   }
 
   async fetchIdToken() {

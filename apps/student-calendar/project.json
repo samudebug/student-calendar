@@ -37,7 +37,13 @@
               "maximumError": "4kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/student-calendar/src/assets/environments/environment.ts",
+              "with": "apps/student-calendar/src/assets/environments/environment.prod.ts"
+            }
+          ]
         },
         "development": {
           "optimization": false,

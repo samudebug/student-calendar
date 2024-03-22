@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { first, firstValueFrom } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../assets/environments/envinroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://localhost:3000/api';
+  private baseUrl = environment.apiUrl;
   constructor(
     private http: HttpClient,
     private authService: AuthService,

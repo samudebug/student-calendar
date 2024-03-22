@@ -1,4 +1,5 @@
 import { Route } from "@angular/router";
+import { TasksComponent } from "./tasks/tasks.component";
 
 export const classRoutes: Route[] = [
   {
@@ -8,6 +9,6 @@ export const classRoutes: Route[] = [
   },
   {
     path: 'tasks',
-    loadComponent: () => import('./tasks/tasks.component').then((mod) => mod.TasksComponent),
+    component: TasksComponent
   }
 ]
