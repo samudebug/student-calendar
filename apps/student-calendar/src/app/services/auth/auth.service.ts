@@ -35,13 +35,12 @@ export class AuthService {
   async loginWithGoogle() {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(this.auth, provider);
-    this.router.navigate(['/', 'classes'])
+
   }
 
   async login(email: string, password: string) {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
-      this.router.navigate(['/', 'classes']);
     } catch (error: any) {
       const errorCode = error.code;
       if (errorCode === AuthErrorCodes.INVALID_EMAIL) {
@@ -66,7 +65,6 @@ export class AuthService {
       const user = await firstValueFrom(this.user$);
       if (!user) return;
       await updateProfile(user, { displayName: name });
-      this.router.navigate(['/', 'classes']);
     } catch (error: any) {
       const errorCode = error.code;
       if (errorCode === AuthErrorCodes.INVALID_EMAIL) {

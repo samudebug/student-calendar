@@ -11,7 +11,7 @@ export const dashboardRoutes: Route[] = [
   },
   {
     path: 'classes/invite/:code',
-    component: JoinClassComponent
+    loadComponent: () => import('./join-class/join-class-page.component').then((mod) => mod.JoinClassPageComponent)
   },
   {
     path: 'classes/:classId',

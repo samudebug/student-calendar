@@ -2,11 +2,12 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ClassesService } from '../../services/classes/classes.service';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-join-class-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatProgressSpinner],
   templateUrl: './join-class-page.component.html',
   styleUrl: './join-class-page.component.css',
 })
