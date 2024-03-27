@@ -24,11 +24,15 @@ export class ApiService {
    */
   async get<T>(
     url: string,
-    headers?: { [header: string]: string }
+    options?: {
+      headers?: { [header: string]: string },
+      params?: {[param: string]: string}
+    }
   ): Promise<T> {
     return firstValueFrom(
       this.http.get<T>(`${this.baseUrl}${url}`, {
-        headers: { ...headers, ...(await this.getHeaders()) },
+        headers: { ...options?.headers, ...(await this.getHeaders()) },
+        params: options?.params
       })
     );
   }

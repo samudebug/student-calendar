@@ -1,12 +1,27 @@
-<div class="h-full w-full flex flex-col p-3">
-  <div class="flex flex-row justify-between items-center">
-    <div class="flex flex-row gap-x-2 items-center">
-      <button mat-icon-button matTooltip="Return" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
+<div class="h-full w-full flex flex-col p-3 dark:bg-zinc-500 dark:text-white">
+  <div class="flex flex-col items-center">
+    <div class="flex flex-row justify-between items-center w-full">
+      <div class="flex flex-row gap-x-2 items-center">
+        <button mat-icon-button matTooltip="Return" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2 class="font-semibold">{{ class?.name }}</h2>
+      </div>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
       </button>
-      <h2 class="font-semibold">{{ class?.name }}</h2>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="openStudents()">
+          <mat-icon>people</mat-icon>
+          <span>Students</span>
+        </button>
+        <button mat-menu-item (click)="openDelete()">
+          <mat-icon>delete</mat-icon>
+          <span>Delete</span>
+        </button>
+      </mat-menu>
     </div>
-    <div class="flex flex-row gap-x-2 items-center">
+    <div class="flex flex-col md:flex-row gap-x-2 items-center justify-center w-full">
       <span>Add Students with the code</span>
       <div class="flex flex-row gap-x-2 items-center">
         <span class="font-semibold">{{ class?.code }}</span>
@@ -26,24 +41,11 @@
         matTooltip="Copy URL"
       >
         <span class="font-semibold underline">Copy the link</span>
-        <button mat-icon-button type="button" >
+        <button mat-icon-button type="button">
           <mat-icon>link</mat-icon>
         </button>
       </div>
     </div>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="openStudents()">
-        <mat-icon>people</mat-icon>
-        <span>Students</span>
-      </button>
-      <button mat-menu-item (click)="openDelete()">
-        <mat-icon>delete</mat-icon>
-        <span>Delete</span>
-      </button>
-    </mat-menu>
   </div>
   <router-outlet></router-outlet>
 </div>

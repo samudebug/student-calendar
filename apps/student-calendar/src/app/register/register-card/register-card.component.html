@@ -1,10 +1,9 @@
-<mat-card class="rounded-md">
-  <mat-card-content>
-    <div class="flex flex-row ">
-      <div class="w-1/2 flex items-center justify-center">
+<mat-card class="rounded-md m-2">
+    <div class="flex flex-col dark:bg-zinc-500 dark:text-white p-3 md:flex-row ">
+      <div class="w-full md:w-1/2 flex items-center justify-center">
         <span class="text-lg font-bold uppercase">Register</span>
       </div>
-      <div class="w-1/2 flex flex-col items-center justify-center p-3 gap-y-2">
+      <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-3 gap-y-2">
         <span class="font-semibold capitalize">Create your your account</span>
         <form [formGroup]="registerForm" class="flex flex-col gap-y-2 w-full" (submit)="onSubmit()">
           <mat-form-field>
@@ -33,5 +32,4 @@
         <span>Already have an account? <a routerLink="/login" class="text-indigo-400">Login!</a></span>
       </div>
     </div>
-  </mat-card-content>
 </mat-card>

@@ -6,10 +6,16 @@ export class TasksRepositoryMongo implements ITasksRepository {
   constructor(private prismaService: PrismaService) {
 
   }
-  getTasksForClass(classId: string): Promise<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }[]> {
+  getTasksForClass(classId: string, afterDate?: Date): Promise<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }[]> {
     return this.prismaService.task.findMany({
       where: {
-        classId
+        classId,
+        deliverDate: {
+          gt: afterDate
+        }
+      },
+      orderBy: {
+        deliverDate: 'asc'
       }
     })
   }

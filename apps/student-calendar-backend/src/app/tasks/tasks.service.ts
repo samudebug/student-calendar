@@ -22,8 +22,8 @@ export class TasksService {
     private userService: UsersService
   ) {}
 
-  async getByClass(classId: string): Promise<Task[]> {
-    return this.repo.getTasksForClass(classId);
+  async getByClass(classId: string, afterDate?: Date): Promise<Task[]> {
+    return this.repo.getTasksForClass(classId, afterDate);
   }
 
   async getById(id: string): Promise<Task & { student: Student }> {
