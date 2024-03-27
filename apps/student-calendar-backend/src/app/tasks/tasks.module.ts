@@ -7,13 +7,21 @@ import { ITasksRepository } from './repository/ITasksRepository';
 import { PrismaService } from '../prisma.service';
 import { TasksRepositoryMongo } from './repository/TasksRepositoryMongo';
 
+import { NotificationsModule } from '../notifications/notifications.module';
+import { UsersModule } from '../users/users.module';
+
 @Module({
-  imports: [StudentsModule, ClassesModule],
-  providers: [TasksService, {
-    provide: ITasksRepository,
-    useFactory: (prismaService: PrismaService) => new TasksRepositoryMongo(prismaService),
-    inject: [PrismaService]
-  }, PrismaService],
+  imports: [StudentsModule, ClassesModule, NotificationsModule, UsersModule],
+  providers: [
+    TasksService,
+    {
+      provide: ITasksRepository,
+      useFactory: (prismaService: PrismaService) =>
+        new TasksRepositoryMongo(prismaService),
+      inject: [PrismaService],
+    },
+    PrismaService,
+  ],
   controllers: [TasksController],
 })
 export class TasksModule {}

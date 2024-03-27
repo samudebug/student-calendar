@@ -1,15 +1,25 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withRouterConfig } from '@angular/router';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withRouterConfig,
+} from '@angular/router';
 import { appRoutes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { provideHttpClient } from '@angular/common/http';
 import { provideNativeDateAdapter } from '@angular/material/core';
+import { provideMessaging } from '@angular/fire/messaging';
+import { getMessaging } from 'firebase/messaging';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(appRoutes, withComponentInputBinding(), withRouterConfig({paramsInheritanceStrategy: 'always'})),
+    provideRouter(
+      appRoutes,
+      withComponentInputBinding(),
+      withRouterConfig({ paramsInheritanceStrategy: 'always' })
+    ),
     provideAnimationsAsync(),
     provideHttpClient(),
     provideNativeDateAdapter(),
@@ -23,9 +33,11 @@ export const appConfig: ApplicationConfig = {
           apiKey: 'AIzaSyDBW9A4n7cSGlHGy-bxH13e-g1alcJJuMI',
           authDomain: 'tarefas-app-exemplo.firebaseapp.com',
           messagingSenderId: '215554073421',
+
         })
       )
     ),
     importProvidersFrom(provideAuth(() => getAuth())),
+    importProvidersFrom(provideMessaging(() => getMessaging())),
   ],
 };

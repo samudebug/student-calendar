@@ -8,6 +8,9 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { initializeFirebase } from './configs/firebase.config';
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 initializeFirebase();
 

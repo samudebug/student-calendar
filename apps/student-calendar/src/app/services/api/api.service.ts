@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { first, firstValueFrom } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { Router } from '@angular/router';
-import { environment } from '../../../assets/environments/envinroment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

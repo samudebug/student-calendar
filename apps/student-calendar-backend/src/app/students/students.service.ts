@@ -6,7 +6,7 @@ import { Student } from '@prisma/client';
 export class StudentsService {
   constructor(private repo: IStudentRepository) {}
 
-  async getStudentByUserId(userId: string): Promise<Student> {
-    return this.repo.getStudentByUserId(userId);
+  async getStudentByUserIdAndClassId(userId: string, classId: string): Promise<Student> {
+    return this.repo.getStudentByUserId(userId, classId);
   }
 }

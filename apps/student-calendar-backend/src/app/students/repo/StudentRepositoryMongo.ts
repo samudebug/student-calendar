@@ -4,10 +4,11 @@ import { IStudentRepository } from "./IStudentRepository";
 
 export class StudentRepositoryMongo implements IStudentRepository {
   constructor (private prismaService: PrismaService) {}
-  getStudentByUserId(userId: string): Promise<Student> {
+  getStudentByUserId(userId: string, classId: string): Promise<Student> {
     return this.prismaService.student.findUnique({
       where: {
-        userId
+        userId,
+        classId
       }
     });
   }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LoginCardComponent } from './login-card/login-card.component';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { environment } from '../../assets/environments/envinroment';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',

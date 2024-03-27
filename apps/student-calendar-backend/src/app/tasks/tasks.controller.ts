@@ -3,22 +3,26 @@ import { TasksService } from './tasks.service';
 import { Student, Task } from '@prisma/client';
 import { UserId } from '../../decorators/userId.decorator';
 import { AuthGuard } from '../../guards/auth/auth.guard';
+import { ApiKeyGuard } from '../../guards/apiKey/apiKey.guard';
 
 @Controller('classes/:classId/tasks')
-@UseGuards(AuthGuard)
+
 export class TasksController {
   constructor(private taskService: TasksService) {}
   @Get()
+  @UseGuards(AuthGuard)
   async getByClass(@Param('classId') classId: string): Promise<Task[]> {
     return this.taskService.getByClass(classId);
   }
 
   @Get(':id')
+  @UseGuards(AuthGuard)
   async getById(@Param('id') id: string): Promise<Task & {student: Student}> {
     return this.taskService.getById(id);
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   async create(
     @Param('classId') classId: string,
     @UserId() userId: string,
@@ -32,6 +36,7 @@ export class TasksController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   async update(
     @Param('id') id: string,
     @Param('classId') classId: string,
@@ -45,7 +50,14 @@ export class TasksController {
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string, @UserId() userId: string): Promise<boolean> {
-    return this.taskService.delete(id, userId);
+  @UseGuards(AuthGuard)
+  async delete(@Param('id') id: string, @UserId() userId: string, @Param('classId') classId: string): Promise<boolean> {
+    return this.taskService.delete(id, classId, userId);
+  }
+
+  @Post(':id/notify')
+  @UseGuards(ApiKeyGuard)
+  notify(@Param('id') id: string, @Param('classId') classId: string, @Body() payload) {
+    return this.taskService.notify(id, classId, payload);
   }
 }

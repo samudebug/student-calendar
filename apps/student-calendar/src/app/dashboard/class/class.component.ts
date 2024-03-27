@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { environment } from '../../../assets/environments/envinroment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-class',

@@ -18,7 +18,10 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/student-calendar/src/favicon.ico",
-          "apps/student-calendar/src/assets"
+          "apps/student-calendar/src/assets",
+          "apps/student-calendar/src/manifest.json",
+          "apps/student-calendar/src/firebase-messaging-sw.js",
+          "apps/student-calendar/src/environments/environment.ts"
         ],
         "styles": ["apps/student-calendar/src/styles.scss"],
         "scripts": []
@@ -40,8 +43,8 @@
           "outputHashing": "all",
           "fileReplacements": [
             {
-              "replace": "apps/student-calendar/src/assets/environments/environment.ts",
-              "with": "apps/student-calendar/src/assets/environments/environment.prod.ts"
+              "replace": "apps/student-calendar/src/environments/environment.ts",
+              "with": "apps/student-calendar/src/environments/environment.prod.ts"
             }
           ]
         },
