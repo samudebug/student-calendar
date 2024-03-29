@@ -27,11 +27,11 @@ jobs:
         CLOUD_TASKS_QUEUE: vars.CLOUD_TASKS_QUEUE
         GOOGLE_CLOUD_LOCATION: vars.GOOGLE_CLOUD_LOCATION
         API_KEY: vars.API_KEY
-      run: docker-compose -f "docker-compose.test.yml" run --build --rm test
+      run: docker-compose -f ./docker-compose.test.yml run --build --rm test
 
     - name: Stop containers
       if: always()
-      run: docker-compose -f "docker-compose.test.yml" stop
+      run: docker-compose -f ./docker-compose.test.yml stop
 
     - name: Delete containers
       run: docker ps -aq | xargs docker rm
