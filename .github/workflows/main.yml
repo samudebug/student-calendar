@@ -17,13 +17,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - uses: adrielcodeco/docker-compose-run-action@v1
-      with:
-        compose-file: './docker-compose.test.yml'
-        service: test
-        run-flags: |
-                  --build
-                  --rm
+    - name: Start containers and run tests
       env:
         FIREBASE_SERVICE_ACCOUNT: vars.FIREBASE_SERVICE_ACCOUNT
         DATABASE_URL: vars.DATABASE_URL
@@ -33,3 +27,12 @@ jobs:
         CLOUD_TASKS_QUEUE: vars.CLOUD_TASKS_QUEUE
         GOOGLE_CLOUD_LOCATION: vars.GOOGLE_CLOUD_LOCATION
         API_KEY: vars.API_KEY
+      run: docker-compose -f "./docker-compose.test.yml" run test --rm --build
+    - name: Stop containers
+      run: docker-compose -f "./docker-compose.test.yml" stop
+    - name: Delete Containers
+      run: docker ps -aq | xargs docker rm
+    - name: Delete images
+      run: docker image prune -a --force
+    - name: Delete volums
+      run: docker volume prune -a -f
