@@ -66,6 +66,7 @@ services:
     expose:
       - 27017
     restart: unless-stopped
+    hostname: db-server
     healthcheck:
       # Use "mongosh" instead of "mongo" for v5+
       test:

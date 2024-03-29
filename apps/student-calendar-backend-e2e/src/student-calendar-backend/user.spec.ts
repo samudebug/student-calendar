@@ -8,10 +8,10 @@ describe('/api/users', () => {
     const testPassword = 'test123';
     await signInWithEmailAndPassword(auth, testEmail, testPassword);
     globalThis.loggedIn = true;
-  });
+  }, 60000);
   afterEach(async () => {
     signOut(auth);
-  });
+  }, 60000);
   it('PATCH /api/users/me should update the current user', async () => {
     const res = await axios.patch('/api/users/me', { name: 'testName' });
     const user = auth.currentUser;
@@ -25,7 +25,7 @@ describe('/api/users', () => {
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     });
-  });
+  }, 60000);
 
   it('GET /api/users/me should return info about the current user', async () => {
     const res = await axios.get('/api/users/me');
@@ -40,7 +40,7 @@ describe('/api/users', () => {
       createdAt: expect.any(String),
       updatedAt: expect.any(String)
     });
-  });
+  }, 60000);
 
 
 });
