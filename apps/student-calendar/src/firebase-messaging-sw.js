@@ -5,7 +5,7 @@ importScripts('/__/firebase/9.2.0/firebase-app-compat.js');
 importScripts('/__/firebase/9.2.0/firebase-messaging-compat.js');
 importScripts('/__/firebase/init.js');
 
-const messaging = firebase.messaging();
+
 
 /**
  * Here is is the code snippet to initialize Firebase Messaging in the Service
@@ -43,6 +43,8 @@ const messaging = firebase.messaging();
    authDomain: 'tarefas-app-exemplo.firebaseapp.com',
    messagingSenderId: '215554073421',
  });
+
+ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
   console.log(

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@student-calendar/models": ["models/src/index.ts"]
+      "@student-calendar/models": ["models/src/index.ts"],
+      "@student-calendar-backend": ["apps/student-calendar-backend/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

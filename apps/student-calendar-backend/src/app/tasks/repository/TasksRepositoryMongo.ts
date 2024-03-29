@@ -19,10 +19,11 @@ export class TasksRepositoryMongo implements ITasksRepository {
       }
     })
   }
-  getById(id: string): Promise<Task & {student: Student}> {
+  getById(id: string, classId: string): Promise<Task & {student: Student}> {
     return this.prismaService.task.findFirst({
       where: {
-        id
+        id,
+        classId
       },
       include: {
         student: true

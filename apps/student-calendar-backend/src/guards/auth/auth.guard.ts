@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { auth } from "firebase-admin";
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
@@ -18,8 +18,9 @@ export class AuthGuard implements CanActivate {
 
     const decodedToken = await auth().verifyIdToken(token);
     if (decodedToken) {
-
       req.userId = decodedToken.uid;
+      console.log("Token authenticated");
+      Logger.log("Token authenticated", "AuthGuard");
     }
     return !!decodedToken;
   }

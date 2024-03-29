@@ -42,7 +42,7 @@ export class TasksComponent implements OnInit {
 
   openCreate() {
     this.dialog.open(TaskFormComponent, {
-      width: '50%',
+      panelClass: ['w-full', 'md:w-1/2'],
       data: { classId: this.classId },
     });
   }
@@ -51,7 +51,7 @@ export class TasksComponent implements OnInit {
     const currentTask = await this.tasksService.getTask(this.classId, taskId);
     const currentUser = await firstValueFrom(this.authService.user$);
     this.dialog.open(TaskFormComponent, {
-      width: '50%',
+      panelClass: ['w-full', 'md:w-1/2'],
       data: {
         classId: this.classId,
         task: currentTask,

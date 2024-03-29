@@ -16,11 +16,10 @@ export class UsersService {
   async createOrUpdateUser(userId: string, user: Partial<Omit<User, 'id' | 'userId' | 'createdAt'| 'updatedAt'>>) {
     const authUser = await auth().getUser(userId);
     const userToUpdate = {
-      userId,
-      name: authUser.displayName ?? "",
-      ...user
+      displayName: user.name ?? authUser.displayName,
+
     };
-    await auth().updateUser(userId, {displayName: userToUpdate.name,});
-    return this.repo.createOrUpdateUser(userId, {...userToUpdate, photoUrl: ''});
+    await auth().updateUser(userId, userToUpdate);
+    return this.repo.createOrUpdateUser(userId, {...user, photoUrl: '', userId, fcmToken: ''});
   }
 }

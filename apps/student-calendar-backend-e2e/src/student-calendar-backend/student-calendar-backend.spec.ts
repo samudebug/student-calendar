@@ -8,3 +8,4 @@ describe('GET /api', () => {
     expect(res.data).toEqual({ message: 'Hello API' });
   });
 });
+

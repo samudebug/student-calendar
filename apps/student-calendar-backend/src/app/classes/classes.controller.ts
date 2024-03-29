@@ -50,6 +50,7 @@ export class ClassesController {
 
   @Delete(':id')
   delete(@Param('id') id: string, @UserId() userId: string) {
+
     return this.classesService.deleteById(id, userId);
   }
 

@@ -3,6 +3,7 @@ import { IClassesRepository } from './repository/IClassesRepository';
 import { Class, Student } from '@prisma/client';
 import * as crypto from 'crypto';
 import { auth } from 'firebase-admin';
+import { Not } from 'typeorm';
 
 @Injectable()
 export class ClassesService {
@@ -13,7 +14,9 @@ export class ClassesService {
   }
 
   async getById(id: string): Promise<Class & {students: Student[]}> {
-    return this.classesRepository.getById(id);
+    const currentClass = await this.classesRepository.getById(id);
+    if (!currentClass) throw new NotFoundException("Class not found");
+    return currentClass;
   }
 
   async add(
@@ -43,13 +46,15 @@ export class ClassesService {
     >
   ): Promise<Class> {
     const currentClass = await this.getById(id);
-    if (currentClass.createdBy !== userId) throw new UnauthorizedException();
+    if (!currentClass) throw new NotFoundException("Class not found");
+    if (currentClass.createdBy !== userId) throw new UnauthorizedException("User cannot update this class");
     return this.classesRepository.updateById(id, userId, classToUpdate);
   }
 
   async deleteById(id: string, userId: string) {
     const currentClass = await this.getById(id);
-    if (currentClass.createdBy !== userId) throw new UnauthorizedException();
+    if (!currentClass) throw new NotFoundException("Class not found");
+    if (currentClass.createdBy !== userId) throw new UnauthorizedException("User cannot delete this class");
     return this.classesRepository.deleteById(id);
   }
 

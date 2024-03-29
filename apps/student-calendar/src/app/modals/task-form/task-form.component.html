@@ -19,8 +19,8 @@
       [formGroup]="taskForm"
       (submit)="$event.preventDefault(); onSubmit()"
     >
-      <div class="flex flex-row gap-x-2">
-        <mat-form-field class="w-1/2">
+      <div class="flex flex-col md:flex-row gap-x-2">
+        <mat-form-field class="w-full md:w-1/2">
           <mat-label>Name</mat-label>
           <input
             type="text"
@@ -32,7 +32,7 @@
           <mat-error>This field is required</mat-error>
           }
         </mat-form-field>
-        <mat-form-field class="w-1/2">
+        <mat-form-field class="w-full md:w-1/2">
           <mat-label>Deliver Date</mat-label>
           <input
             matInput
@@ -66,7 +66,7 @@
     }
     @if (!isEditing && !!data.task) {
       <div class="flex flex-col gap-y-2 w-full">
-        <div class="flex flex-row gap-x-2 w-full">
+        <div class="flex flex-col md:flex-row gap-x-2 w-full">
           <div class="w-1/2 flex flex-col gap-y-2">
             <span class="font-lg font-semibold">Name</span>
             <span>{{ data.task.name }}</span>

@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Student, Task } from '@prisma/client';
 import { UserId } from '../../decorators/userId.decorator';
@@ -6,20 +16,26 @@ import { AuthGuard } from '../../guards/auth/auth.guard';
 import { ApiKeyGuard } from '../../guards/apiKey/apiKey.guard';
 
 @Controller('classes/:classId/tasks')
-
 export class TasksController {
   constructor(private taskService: TasksService) {}
   @Get()
   @UseGuards(AuthGuard)
-  async getByClass(@Param('classId') classId: string, @Query('afterDate') afterDate?: Date): Promise<Task[]> {
-
-    return this.taskService.getByClass(classId, afterDate);
+  async getByClass(
+    @Param('classId') classId: string,
+    @UserId() userId: string,
+    @Query('afterDate') afterDate?: Date
+  ): Promise<Task[]> {
+    return this.taskService.getByClass(classId, userId, afterDate);
   }
 
   @Get(':id')
   @UseGuards(AuthGuard)
-  async getById(@Param('id') id: string): Promise<Task & {student: Student}> {
-    return this.taskService.getById(id);
+  async getById(
+    @Param('id') id: string,
+    @Param('classId') classId: string,
+    @UserId() userId: string
+  ): Promise<Task & { student: Student }> {
+    return this.taskService.getById(id, classId, userId);
   }
 
   @Post()
@@ -52,13 +68,21 @@ export class TasksController {
 
   @Delete(':id')
   @UseGuards(AuthGuard)
-  async delete(@Param('id') id: string, @UserId() userId: string, @Param('classId') classId: string): Promise<boolean> {
+  async delete(
+    @Param('id') id: string,
+    @UserId() userId: string,
+    @Param('classId') classId: string
+  ): Promise<boolean> {
     return this.taskService.delete(id, classId, userId);
   }
 
   @Post(':id/notify')
   @UseGuards(ApiKeyGuard)
-  notify(@Param('id') id: string, @Param('classId') classId: string, @Body() payload) {
+  notify(
+    @Param('id') id: string,
+    @Param('classId') classId: string,
+    @Body() payload
+  ) {
     return this.taskService.notify(id, classId, payload);
   }
 }

@@ -32,4 +32,6 @@ ENV CLOUD_TASKS_QUEUE=$CLOUD_TASKS_QUEUE
 ENV API_KEY=$API_KEY
 COPY prisma ./prisma/
 RUN npx prisma generate
+RUN apk add curl
+HEALTHCHECK CMD curl --fail http://localhost:3333/api || exit 1
 CMD node ./main.js
