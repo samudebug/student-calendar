@@ -48,7 +48,7 @@ services:
     hostname: server
     depends_on:
       mongo:
-        condition: service_healthy
+        condition: service_started
       firebase:
         condition: service_started
   # This config is for MongoDB v4
