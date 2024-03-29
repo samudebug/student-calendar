@@ -21,6 +21,7 @@ jobs:
       with:
         compose-file: './docker-compose.test.yml'
         service: test
+        run-flags: --build --rm
       env:
         FIREBASE_SERVICE_ACCOUNT: vars.FIREBASE_SERVICE_ACCOUNT
         DATABASE_URL: vars.DATABASE_URL
