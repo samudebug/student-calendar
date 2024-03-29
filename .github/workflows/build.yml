@@ -17,8 +17,8 @@ jobs:
 
       - uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: 'projects/215554073421/locations/global/workloadIdentityPools/auth-pool/providers/github-actions-provider'
-          service_account: 'githubactions@tarefas-app-exemplo.iam.gserviceaccount.com'
+
+          credentials_json: "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}"
 
       - name: build and push docker image
         env:
