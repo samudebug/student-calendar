@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  docker:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Start containers and Run Tests
+      env:
+        FIREBASE_SERVICE_ACCOUNT: vars.FIREBASE_SERVICE_ACCOUNT
+        DATABASE_URL: vars.DATABASE_URL
+        BASE_URL: vars.BASE_URL
+        FIREBASE_WEB_CONFIG: vars.FIREBASE_WEB_CONFIG
+        GOOGLE_CLOUD_PROJECT: vars.GOOGLE_CLOUD_PROJECT
+        CLOUD_TASKS_QUEUE: vars.CLOUD_TASKS_QUEUE
+        GOOGLE_CLOUD_LOCATION: vars.GOOGLE_CLOUD_LOCATION
+        API_KEY: vars.API_KEY
+      run: docker-compose -f "docker-compose.test.yml" run --build --rm test
+
+    - name: Stop containers
+      if: always()
+      run: docker-compose -f "docker-compose.test.yml" stop
+
+    - name: Delete containers
+      run: docker ps -aq | xargs docker rm
+
+    - name: Prune Images
+      run: docker image prune -a --force
+
+    - name: Prune Volumes
+      run: docker volume prune -a -f
