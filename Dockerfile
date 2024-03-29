@@ -1,8 +1,8 @@
 FROM node:lts-alpine3.18 as builder
 WORKDIR /app
 RUN npm install nx -g
-COPY package*.json .
-COPY nx.json .
+COPY package*.json ./
+COPY nx.json ./
 RUN npm install
 COPY . .
 COPY prisma ./prisma/
@@ -21,7 +21,7 @@ WORKDIR /app
 COPY --from=builder /app/dist/apps/student-calendar-backend .
 ENV PORT=3333
 EXPOSE ${PORT}
-COPY package*.json .
+COPY package*.json ./
 RUN npm install --omit-dev
 ENV FIREBASE_SERVICE_ACCOUNT=$FIREBASE_SERVICE_ACCOUNT
 ENV DATABASE_URL=$DATABASE_URL
