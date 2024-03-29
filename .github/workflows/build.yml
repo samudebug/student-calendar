@@ -34,3 +34,8 @@ jobs:
           gcloud auth configure-docker southamerica-east1-docker.pkg.dev
           docker build . -t southamerica-east1-docker.pkg.dev/$GOOGLE_PROJECT/student-calendar/backend:latest --build-arg FIREBASE_SERVICE_ACCOUNT=$FIREBASE_SERVICE_ACCOUNT --build-arg DATABASE_URL=$DATABASE_URL --build-arg BASE_URL=$BASE_URL --build-arg GOOGLE_CLOUD_PROJECT=$GOOGLE_CLOUD_PROJECT --build-arg CLOUD_TASKS_QUEUE=$CLOUD_TASKS_QUEUE --build-arg GOOGLE_CLOUD_LOCATION=$GOOGLE_CLOUD_LOCATION --build-arg API_KEY=$API_KEY
           docker push southamerica-east1-docker.pkg.dev/$GOOGLE_PROJECT/student-calendar/backend:latest
+      - name: Deploy
+        uses: 'google-github-actions/deploy-cloudrun@v2'
+        with:
+          service: 'backend'
+          image: 'southamerica-east1-docker.pkg.dev/$GOOGLE_PROJECT/student-calendar/backend:latest'
