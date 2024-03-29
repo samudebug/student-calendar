@@ -37,6 +37,8 @@ jobs:
           docker push southamerica-east1-docker.pkg.dev/$GOOGLE_PROJECT/student-calendar/backend:latest
       - name: Deploy
         uses: 'google-github-actions/deploy-cloudrun@v2'
+        env:
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         with:
           service: 'backend'
           image: 'southamerica-east1-docker.pkg.dev/$GOOGLE_PROJECT/student-calendar/backend:latest'
