@@ -25,7 +25,7 @@ module.exports = async function () {
     } catch (error) {
       if (error.code !== "auth/email-already-in-use") {
         console.log(error);
-        throw new Error("Unhandled",);
+        throw error;
       }
     }
     await signOut(auth);
@@ -36,7 +36,7 @@ module.exports = async function () {
       if (error.code !== "auth/email-already-in-use") {
         console.log(error);
 
-        throw new Error("Unhandled");
+        throw error;
       }
     }
 

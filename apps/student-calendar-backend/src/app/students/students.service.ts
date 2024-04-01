@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IStudentRepository } from './repo/IStudentRepository';
-import { Student } from '@prisma/client';
+import { Student, User } from '@prisma/client';
 
 @Injectable()
 export class StudentsService {
@@ -8,5 +8,9 @@ export class StudentsService {
 
   async getStudentByUserIdAndClassId(userId: string, classId: string): Promise<Student> {
     return this.repo.getStudentByUserId(userId, classId);
+  }
+
+  async getStudentsByClassId(classId: string): Promise<(Student & {user: User})[]> {
+    return this.repo.getStudentsByClass(classId);
   }
 }

@@ -8,9 +8,12 @@ services:
       PORT: 3333
       HOST: server
       FIREBASE_AUTH_HOST: http://firebase:9099
+      API_KEY: ${API_KEY}
     depends_on:
       server:
-        condition: service_started
+        condition: service_healthy
+      firebase:
+        condition: service_healthy
   firebase:
     hostname: firebase
     build:
@@ -20,6 +23,11 @@ services:
       - 9099
     ports:
       - 9099:9099 # **AUTH_PORT**
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9099"]
+      interval: 5s
+      timeout: 10s
+      retries: 15
   server:
     build:
       context: .
@@ -48,9 +56,8 @@ services:
     hostname: server
     depends_on:
       mongo:
-        condition: service_started
-      firebase:
-        condition: service_started
+        condition: service_healthy
+
   # This config is for MongoDB v4
   # It's a Replica Set (required for Prisma Client)
   mongo:

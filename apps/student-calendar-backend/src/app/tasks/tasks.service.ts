@@ -19,7 +19,6 @@ export class TasksService {
     private classesService: ClassesService,
     private studentService: StudentsService,
     private notificationService: NotificationsService,
-    private userService: UsersService
   ) {}
 
   async getByClass(
@@ -84,13 +83,14 @@ export class TasksService {
         MIN_TIME_FOR_NOTIFICATION
       ) {
         await this.notificationService.scheduleNotification(
-          `/classes/${classId}/tasks/${result.id}/notify`,
+          `/notifications/`,
           {
             title: 'Task coming up',
             body: `The task ${result.name} is scheduled to today`,
             data: JSON.stringify({
               taskId: result.id,
             }),
+            classId
           },
           notificationDate
         );
@@ -137,17 +137,4 @@ export class TasksService {
     return this.repo.deleteById(id, student.id);
   }
 
-  async notify(id: string, classId: string, payload: Record<string, any>) {
-    const currentClass = await this.classesService.getById(classId);
-    await Promise.all(
-      currentClass.students.map(async ({ userId }) => {
-        const user = await this.userService.getByUserId(userId);
-        if (user && user.fcmToken)
-          return this.notificationService.sendNotification(
-            user.fcmToken,
-            payload
-          );
-      })
-    );
-  }
 }

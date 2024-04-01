@@ -75,14 +75,4 @@ export class TasksController {
   ): Promise<boolean> {
     return this.taskService.delete(id, classId, userId);
   }
-
-  @Post(':id/notify')
-  @UseGuards(ApiKeyGuard)
-  notify(
-    @Param('id') id: string,
-    @Param('classId') classId: string,
-    @Body() payload
-  ) {
-    return this.taskService.notify(id, classId, payload);
-  }
 }

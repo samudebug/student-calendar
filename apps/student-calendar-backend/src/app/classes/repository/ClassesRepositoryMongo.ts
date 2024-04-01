@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma.service';
 
 export class ClassRepositoryMongo implements IClassesRepository {
   constructor(private prismaService: PrismaService) {}
-  async removeStudentFromClass(classId: string, userId: string,  studentId: string): Promise<boolean> {
+  async removeStudentFromClass(classId: string, studentId: string): Promise<boolean> {
     return !!(await this.prismaService.student.deleteMany({
       where: {
         classId,
