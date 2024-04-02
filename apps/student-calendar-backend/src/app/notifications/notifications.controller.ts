@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiKeyGuard } from '../../guards/apiKey/apiKey.guard';
 import { NotificationsService } from './notifications.service';
 import { Notification } from '@prisma/client';
@@ -18,7 +18,7 @@ export class NotificationsController {
 
   @Get('')
   @UseGuards(AuthGuard)
-  getNotifications(@UserId() userId: string) {
-    return this.notificationsService.getNotificationsForClassesFromUser(userId);
+  getNotifications(@UserId() userId: string, @Query('afterDate') afterDate: Date) {
+    return this.notificationsService.getNotificationsForClassesFromUser(userId, afterDate);
   }
 }

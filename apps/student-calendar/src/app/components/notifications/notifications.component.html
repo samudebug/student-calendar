@@ -1,0 +1,26 @@
+<button mat-icon-button [matMenuTriggerFor]="menu" (click)="showBadge = false">
+  @if(((notifications$ | async)?.length ?? 0) > 0 && showBadge) {
+    <mat-icon [matBadge]="(notifications$ | async)?.length">notifications</mat-icon>
+  }
+  @if(!showBadge || ((notifications$ | async)?.length ?? 0) === 0) {
+    <mat-icon>notifications</mat-icon>
+  }
+</button>
+<mat-menu #menu="matMenu">
+  @if ((notifications$ | async)?.length == 0) {
+    <span class="p-2 text-center text-white">
+      No new notifications
+    </span>
+  }
+  @for (item of (notifications$ | async); track item) {
+  <div
+    class="flex flex-row gap-2 items-center p-2 hover:bg-zinc-400 transition cursor-pointer"
+  >
+    <mat-icon class="text-white">notifications</mat-icon>
+    <div class="p-3 flex flex-col gap-2">
+      <span class="text-lg font-semibold text-white">{{ item.body }}</span>
+      <span class="text-sm text-zinc-300">{{ item.createdAt | date:'EEEE, hh:mm aa' }}</span>
+    </div>
+  </div>
+  }
+</mat-menu>

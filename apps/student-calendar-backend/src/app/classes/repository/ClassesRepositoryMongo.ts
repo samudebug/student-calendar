@@ -70,6 +70,7 @@ export class ClassRepositoryMongo implements IClassesRepository {
             userId: userId,
             name: userName,
             photoUrl: photoUrl,
+
           },
         },
       },
