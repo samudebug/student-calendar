@@ -1,4 +1,4 @@
-import { Student, Task } from '@prisma/client';
+import { Class, Student, Task } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
 import { ITasksRepository } from './ITasksRepository';
 
@@ -59,7 +59,7 @@ export class TasksRepositoryMongo implements ITasksRepository {
     }));
   }
 
-  async getByUserId(userId: string, afterDate?: Date): Promise<Task[]> {
+  async getByUserId(userId: string, afterDate?: Date): Promise<(Task & { student: Student, class: Class })[]> {
     return this.prismaService.task.findMany({
       where: {
         class: {
@@ -75,6 +75,10 @@ export class TasksRepositoryMongo implements ITasksRepository {
       },
       orderBy: {
         deliverDate: 'desc'
+      },
+      include: {
+        student: true,
+        class: true
       }
     });
   }
