@@ -6,5 +6,5 @@ export abstract class ITasksRepository {
   abstract create(newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Promise<Task>;
   abstract update(id: string, classId: string, createdBy: string, taskToUpdate: Partial<Omit<Task, 'id' | 'createdBy' | 'classId' | 'createdAt' | 'updatedAt'>>): Promise<Task>;
   abstract deleteById(id: string, createdBy: string): Promise<boolean>;
-
+  abstract getByUserId(userId: string, afterDate?: Date): Promise<Task[]>
 }

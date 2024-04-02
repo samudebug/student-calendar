@@ -205,4 +205,8 @@ export class TasksService {
     }
     return this.repo.deleteById(id, student.id);
   }
+
+  async getByUserId(userId: string, afterDate?: Date) {
+    return this.repo.getByUserId(userId, afterDate);
+  }
 }

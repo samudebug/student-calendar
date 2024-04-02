@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TasksController } from './tasks.controller';
 import { StudentsModule } from '../students/students.module';
@@ -11,7 +11,7 @@ import { NotificationsModule } from '../notifications/notifications.module';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [StudentsModule, ClassesModule, NotificationsModule, UsersModule],
+  imports: [StudentsModule, ClassesModule, NotificationsModule, forwardRef(() => UsersModule)],
   providers: [
     TasksService,
     {
@@ -23,5 +23,6 @@ import { UsersModule } from '../users/users.module';
     PrismaService,
   ],
   controllers: [TasksController],
+  exports: [TasksService],
 })
 export class TasksModule {}

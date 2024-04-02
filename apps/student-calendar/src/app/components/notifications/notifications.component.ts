@@ -5,11 +5,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge'
 import { NotificationsService } from '../../services/notifications/notifications.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatMenuModule, MatIconModule, MatBadgeModule],
+  imports: [CommonModule, RouterModule,MatButtonModule, MatMenuModule, MatIconModule, MatBadgeModule],
   templateUrl: './notifications.component.html',
   styleUrl: './notifications.component.css',
 })
