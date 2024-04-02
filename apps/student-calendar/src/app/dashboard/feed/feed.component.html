@@ -1,0 +1,23 @@
+<div
+  class="p-4 dark:bg-zinc-500 flex-1 h-full flex flex-col gap-2 overflow-y-auto"
+>
+  @for (section of feed; track section) {
+  <div class="text-2xl font-semibold text-zinc-700 dark:text-white">
+    {{ section.date }}
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+    @for (task of section.tasks; track task) {
+    <app-task-element
+      (click)="openView(task)"
+      class="cursor-pointer"
+      [name]="task.name"
+      [date]="task.deliverDate"
+      [notes]="task.notes"
+      [createdByName]="task.student.name"
+      [createdByImgUrl]="task.student.photoUrl"
+      [className]="task.class.name"
+    />
+    }
+  </div>
+  }
+</div>

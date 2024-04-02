@@ -1,58 +1,85 @@
-import { Student, Task } from "@prisma/client";
-import { PrismaService } from "../../prisma.service";
-import { ITasksRepository } from "./ITasksRepository";
+import { Class, Student, Task } from '@prisma/client';
+import { PrismaService } from '../../prisma.service';
+import { ITasksRepository } from './ITasksRepository';
 
 export class TasksRepositoryMongo implements ITasksRepository {
-  constructor(private prismaService: PrismaService) {
-
-  }
+  constructor(private prismaService: PrismaService) {}
   getTasksForClass(classId: string, afterDate?: Date): Promise<Task[]> {
     return this.prismaService.task.findMany({
       where: {
         classId,
         deliverDate: {
-          gt: afterDate
-        }
+          gt: afterDate,
+        },
       },
       orderBy: {
-        deliverDate: 'asc'
-      }
-    })
+        deliverDate: 'asc',
+      },
+    });
   }
-  getById(id: string, classId: string): Promise<Task & {student: Student}> {
+  getById(id: string, classId: string): Promise<Task & { student: Student }> {
     return this.prismaService.task.findFirst({
       where: {
         id,
-        classId
+        classId,
       },
       include: {
-        student: true
-      }
-    })
+        student: true,
+      },
+    });
   }
-  create(newTask: Omit<Task, "id" | "createdAt" | "updatedAt">): Promise<Task> {
+  create(newTask: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Promise<Task> {
     return this.prismaService.task.create({
-      data: newTask
-    })
+      data: newTask,
+    });
   }
-  update(id: string, classId: string, createdBy: string, taskToUpdate: Partial<Omit<Task, 'id' | 'createdBy' | 'classId' | 'createdAt' | 'updatedAt'>>): Promise<Task> {
+  update(
+    id: string,
+    classId: string,
+    createdBy: string,
+    taskToUpdate: Partial<
+      Omit<Task, 'id' | 'createdBy' | 'classId' | 'createdAt' | 'updatedAt'>
+    >
+  ): Promise<Task> {
     return this.prismaService.task.update({
       where: {
         id,
         createdBy,
-        classId
+        classId,
       },
-      data: taskToUpdate
+      data: taskToUpdate,
     });
   }
   async deleteById(id: string, createdBy: string): Promise<boolean> {
     return !!(await this.prismaService.task.delete({
       where: {
         id,
-        createdBy
-      }
-    }))
+        createdBy,
+      },
+    }));
   }
 
-
+  async getByUserId(userId: string, afterDate?: Date): Promise<(Task & { student: Student, class: Class })[]> {
+    return this.prismaService.task.findMany({
+      where: {
+        class: {
+          students: {
+            some: {
+              userId
+            }
+          }
+        },
+        deliverDate: {
+          gte: afterDate
+        }
+      },
+      orderBy: {
+        deliverDate: 'desc'
+      },
+      include: {
+        student: true,
+        class: true
+      }
+    });
+  }
 }

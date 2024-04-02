@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { IUsersRepository } from './repository/IUsersRepository';
 import { User } from '@prisma/client';
 import { auth } from 'firebase-admin';
+import { TasksService } from '../tasks/tasks.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private repo: IUsersRepository) {
+  constructor(private repo: IUsersRepository, private taskService: TasksService) {
 
   }
 
@@ -22,4 +23,11 @@ export class UsersService {
     await auth().updateUser(userId, userToUpdate);
     return this.repo.createOrUpdateUser(userId, {...user, photoUrl: '', userId, fcmToken: ''});
   }
+
+
+  async getTasksFeed(userId: string, afterDate?: Date) {
+    return this.taskService.getByUserId(userId, afterDate);
+  }
+
+
 }

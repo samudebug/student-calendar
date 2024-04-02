@@ -18,7 +18,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: '',
-    redirectTo: '/classes',
+    redirectTo: '/feed',
     pathMatch: 'full'
   },
   {

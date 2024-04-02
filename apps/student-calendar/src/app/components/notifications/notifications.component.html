@@ -15,6 +15,7 @@
   @for (item of (notifications$ | async); track item) {
   <div
     class="flex flex-row gap-2 items-center p-2 hover:bg-zinc-400 transition cursor-pointer"
+    [routerLink]="['/', 'classes', item.classId]"
   >
     <mat-icon class="text-white">notifications</mat-icon>
     <div class="p-3 flex flex-col gap-2">

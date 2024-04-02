@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CloudTasksRepo } from './repo/tasks.repo';
 import { NotificationRepo } from './repo/notifications.repo';
 import { INotificationsRepository } from './repo/INotificationsRepository';
@@ -38,11 +38,15 @@ export class NotificationsService {
       );
       await Promise.all(
         students.map(async (student) => {
-          this.notificationRepo.sendNotification(student.user.fcmToken, {
-            title: notification.title,
-            body: notification.body,
-            data: notification.data,
-          });
+          try {
+            this.notificationRepo.sendNotification(student.user.fcmToken, {
+              title: notification.title,
+              body: notification.body,
+              data: notification.data,
+            });
+          } catch (error) {
+            Logger.error(error);
+          }
         })
       );
     }

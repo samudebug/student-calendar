@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { UsersService } from './users.service';
 import { UserId } from '../../decorators/userId.decorator';
@@ -11,10 +11,15 @@ export class UsersController {
 
   }
 
+  @Get('me/tasks')
+  getTasksFeed(@UserId() userId: string, @Query('afterDate') afterDate?: Date) {
+    return this.service.getTasksFeed(userId, afterDate);
+  }
   @Get('me')
   getMe(@UserId() userId: string): Promise<User> {
     return this.service.getByUserId(userId);
   }
+
 
   @Patch('me')
   updateMe(@UserId() userId: string, @Body() user: Partial<Omit<User, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>): Promise<User> {

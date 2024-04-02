@@ -16,4 +16,10 @@ export class TaskElementComponent {
   date: Date;
   @Input()
   notes: string;
+  @Input()
+  createdByName?: string;
+  @Input()
+  createdByImgUrl?: string;
+  @Input()
+  className?: string
 }
