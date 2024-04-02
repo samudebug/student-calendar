@@ -6,7 +6,7 @@ export class TasksRepositoryMongo implements ITasksRepository {
   constructor(private prismaService: PrismaService) {
 
   }
-  getTasksForClass(classId: string, afterDate?: Date): Promise<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }[]> {
+  getTasksForClass(classId: string, afterDate?: Date): Promise<Task[]> {
     return this.prismaService.task.findMany({
       where: {
         classId,
@@ -30,12 +30,12 @@ export class TasksRepositoryMongo implements ITasksRepository {
       }
     })
   }
-  create(newTask: Omit<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }, "id" | "createdAt" | "updatedAt">): Promise<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }> {
+  create(newTask: Omit<Task, "id" | "createdAt" | "updatedAt">): Promise<Task> {
     return this.prismaService.task.create({
       data: newTask
     })
   }
-  update(id: string, classId: string, createdBy: string, taskToUpdate: Partial<Omit<Task, 'id' | 'createdBy' | 'classId' | 'createdAt' | 'updatedAt'>>): Promise<{ id: string; name: string; notes: string; deliverDate: Date; createdBy: string; classId: string; createdAt: Date; updatedAt: Date; }> {
+  update(id: string, classId: string, createdBy: string, taskToUpdate: Partial<Omit<Task, 'id' | 'createdBy' | 'classId' | 'createdAt' | 'updatedAt'>>): Promise<Task> {
     return this.prismaService.task.update({
       where: {
         id,

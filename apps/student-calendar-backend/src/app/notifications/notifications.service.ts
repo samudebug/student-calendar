@@ -23,6 +23,10 @@ export class NotificationsService {
     return await this.taskRepo.scheduleTask(requestUrl, payload, scheduleTime);
   }
 
+  async deleteNotificationSchedule(notificationName: string) {
+    this.taskRepo.deleteTask(notificationName);
+  }
+
   async sendNotification(notification: Omit<Notification, 'id' | 'createdAt' | 'updatedAt'>) {
     if (process.env.NODE_ENV === 'test') {
       const currentClass = await this.classesService.getById(notification.classId);

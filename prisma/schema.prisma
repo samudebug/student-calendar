@@ -42,6 +42,7 @@ model Task {
   name String
   notes String
   deliverDate DateTime
+  notificationsId String[]
 
   createdBy String @db.ObjectId
   student Student @relation(fields: [createdBy], references: [id], onDelete: Cascade)

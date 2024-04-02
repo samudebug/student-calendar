@@ -1,4 +1,5 @@
 import { CloudTasksClient } from '@google-cloud/tasks';
+import { Logger } from '@nestjs/common';
 import { differenceInSeconds } from 'date-fns';
 
 export class CloudTasksRepo {
@@ -17,23 +18,8 @@ export class CloudTasksRepo {
     const url = `${baseUrl}${requestUrl}`;
 
     const parent = this.client.queuePath(project, location, queue);
-    console.log("Creating task", {
-      parent,
-      task: {
-        scheduleTime: {
-          seconds: inSeconds,
-        },
-        httpRequest: {
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Api-Key': Buffer.from(process.env.API_KEY.trim()).toString('base64')
-          },
-          httpMethod: 'POST',
-          url,
-          body: Buffer.from(JSON.stringify(payload)).toString("base64"),
-        },
-      },
-    })
+    Logger.log(`Scheduling notification for ${scheduleTime}`, 'CloudTasks');
+    Logger.log(`Time for schedule in seconds ${inSeconds}`, 'CloudTasks')
     const [response] = await this.client.createTask({
       parent,
       task: {
@@ -50,6 +36,13 @@ export class CloudTasksRepo {
         },
       },
     });
-    console.log('task created', response.name)
+
+
+    return response.name;
+  }
+
+  async deleteTask(name: string) {
+    Logger.log(`Deleting Cloud Task ${name}`, 'CloudTasks')
+    await this.client.deleteTask({name});
   }
 }
