@@ -18,5 +18,5 @@ export abstract class IClassesRepository {
     >>
   );
   abstract deleteById(id: string): Promise<boolean>;
-  abstract removeStudentFromClass(classId: string, userId: string, studentId: string): Promise<boolean>;
+  abstract removeStudentFromClass(classId: string, studentId: string): Promise<boolean>;
 }

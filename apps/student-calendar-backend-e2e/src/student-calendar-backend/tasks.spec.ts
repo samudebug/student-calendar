@@ -14,6 +14,7 @@ describe('/api/classes/:id/tasks', () => {
     // create a class to hold all the tests
     const res = await axios.post('/api/classes', { name: 'testClass' });
     classId = res.data.id;
+    console.log('class id', classId);
     await signOut(auth);
   }, 60000);
   afterAll(async () => {

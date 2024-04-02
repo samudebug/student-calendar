@@ -55,8 +55,8 @@ export class ClassesController {
   }
 
   @Delete(':id/students/:studentId')
-  removeStudentFromClass(@Param('id') id: string, @Param('studentId') studentId: string, @UserId() userId: string) {
-    return this.classesService.removeStudentFromClass(id, userId, studentId);
+  removeStudentFromClass(@Param('id') id: string, @Param('studentId') studentId: string) {
+    return this.classesService.removeStudentFromClass(id, studentId);
   }
 
 }

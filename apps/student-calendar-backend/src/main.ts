@@ -15,7 +15,9 @@ dotenv.config();
 initializeFirebase();
 
 async function bootstrap() {
+  Logger.log("DB URL", process.env.DATABASE_URL);
   const app = await NestFactory.create(AppModule);
+  app.enableShutdownHooks();
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
   app.enableCors();

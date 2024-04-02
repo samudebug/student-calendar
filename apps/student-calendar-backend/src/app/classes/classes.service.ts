@@ -3,7 +3,6 @@ import { IClassesRepository } from './repository/IClassesRepository';
 import { Class, Student } from '@prisma/client';
 import * as crypto from 'crypto';
 import { auth } from 'firebase-admin';
-import { Not } from 'typeorm';
 
 @Injectable()
 export class ClassesService {
@@ -58,8 +57,8 @@ export class ClassesService {
     return this.classesRepository.deleteById(id);
   }
 
-  async removeStudentFromClass(classId: string, userId: string,studentId: string) {
-    return this.classesRepository.removeStudentFromClass(classId, userId, studentId);
+  async removeStudentFromClass(classId: string, studentId: string) {
+    return this.classesRepository.removeStudentFromClass(classId, studentId);
   }
 
   async useInviteCode(code: string, userId: string) {

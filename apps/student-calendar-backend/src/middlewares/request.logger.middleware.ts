@@ -6,11 +6,12 @@ import { request } from 'http';
 export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     // Gets the request log
-    Logger.log(`req: ${{
-      headers: req.headers,
-      body: req.body,
+    Logger.log(`req: ${JSON.stringify({
+      method: req.method,
       originalUrl: req.originalUrl,
-    }}`);
+      params: req.params,
+      query: req.query
+    })}`);
     // Ends middleware function execution, hence allowing to move on
     if (next) {
       next();

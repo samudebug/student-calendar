@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -7,7 +8,7 @@ import { ITasksRepository } from './repository/ITasksRepository';
 import { Student, Task } from '@prisma/client';
 import { ClassesService } from '../classes/classes.service';
 import { StudentsService } from '../students/students.service';
-import { differenceInHours, setHours, startOfHour } from 'date-fns';
+import { differenceInHours, isSameDay, setHours, startOfHour } from 'date-fns';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersService } from '../users/users.service';
 
@@ -18,8 +19,7 @@ export class TasksService {
     private repo: ITasksRepository,
     private classesService: ClassesService,
     private studentService: StudentsService,
-    private notificationService: NotificationsService,
-    private userService: UsersService
+    private notificationService: NotificationsService
   ) {}
 
   async getByClass(
@@ -68,34 +68,38 @@ export class TasksService {
       userId,
       classId
     );
-    if (!student)
-      throw new UnauthorizedException('Student not in class');
+    if (!student) throw new UnauthorizedException('Student not in class');
+    const notificationsId = [];
     const result = await this.repo.create({
       ...newTask,
       classId,
       createdBy: student.id,
     });
     if (process.env.NODE_ENV !== 'test') {
-
-      const notificationDate = startOfHour(setHours(result.deliverDate, 8));
+      const notificationDate = startOfHour(setHours(newTask.deliverDate, 8));
 
       if (
         differenceInHours(notificationDate, new Date()) >=
         MIN_TIME_FOR_NOTIFICATION
       ) {
-        await this.notificationService.scheduleNotification(
-          `/classes/${classId}/tasks/${result.id}/notify`,
-          {
-            title: 'Task coming up',
-            body: `The task ${result.name} is scheduled to today`,
-            data: JSON.stringify({
-              taskId: result.id,
-            }),
-          },
-          notificationDate
-        );
+        const notificationId =
+          await this.notificationService.scheduleNotification(
+            `/notifications/`,
+            {
+              title: 'Task coming up',
+              body: `The task ${newTask.name} is scheduled to today`,
+              data: JSON.stringify({
+                taskId: result.id,
+              }),
+              classId,
+            },
+            notificationDate
+          );
+        notificationsId.push(notificationId);
+        await this.update(result.id, classId, userId, { notificationsId });
       }
     }
+
     return result;
   }
 
@@ -122,7 +126,61 @@ export class TasksService {
       throw new UnauthorizedException('Student is not in class');
     if (currentTask.createdBy !== student.id)
       throw new UnauthorizedException('User cannot update this task');
-    return this.repo.update(id, classId, student.id, taskToUpdate);
+    let notificationsId = [];
+    if (taskToUpdate.notificationsId) {
+      notificationsId = taskToUpdate.notificationsId;
+    } else {
+      notificationsId = currentTask.notificationsId;
+    }
+    if (process.env.NODE_ENV !== 'test') {
+      if (taskToUpdate.deliverDate) {
+        if (!isSameDay(currentTask.deliverDate, taskToUpdate.deliverDate)) {
+          Logger.log('Is updating task date');
+          await Promise.all(
+            currentTask.notificationsId.map((id) => {
+              try {
+                return this.notificationService.deleteNotificationSchedule(id);
+              } catch (error) {
+                Logger.error(error);
+              }
+            })
+          );
+          const notificationDate = startOfHour(
+            setHours(taskToUpdate.deliverDate, 8)
+          );
+          notificationsId = [];
+          if (
+            differenceInHours(notificationDate, new Date()) >=
+            MIN_TIME_FOR_NOTIFICATION
+          ) {
+            try {
+              const notificationId =
+                await this.notificationService.scheduleNotification(
+                  `/notifications/`,
+                  {
+                    title: 'Task coming up',
+                    body: `The task ${
+                      taskToUpdate.name ?? currentTask.name
+                    } is scheduled to today`,
+                    data: JSON.stringify({
+                      taskId: id,
+                    }),
+                    classId,
+                  },
+                  notificationDate
+                );
+              notificationsId.push(notificationId);
+            } catch (error) {
+              Logger.error(error);
+            }
+          }
+        }
+      }
+    }
+    return this.repo.update(id, classId, student.id, {
+      ...taskToUpdate,
+      notificationsId,
+    });
   }
 
   async delete(id: string, classId: string, userId: string) {
@@ -134,20 +192,17 @@ export class TasksService {
     const currentTask = await this.getById(id, classId, userId);
     if (currentTask.createdBy !== student.id)
       throw new UnauthorizedException('User cannot delete this task');
+    if (process.env.NODE_ENV !== 'test') {
+      await Promise.all(
+        currentTask.notificationsId.map((id) => {
+          try {
+            return this.notificationService.deleteNotificationSchedule(id);
+          } catch (error) {
+            Logger.error(error);
+          }
+        })
+      );
+    }
     return this.repo.deleteById(id, student.id);
-  }
-
-  async notify(id: string, classId: string, payload: Record<string, any>) {
-    const currentClass = await this.classesService.getById(classId);
-    await Promise.all(
-      currentClass.students.map(async ({ userId }) => {
-        const user = await this.userService.getByUserId(userId);
-        if (user && user.fcmToken)
-          return this.notificationService.sendNotification(
-            user.fcmToken,
-            payload
-          );
-      })
-    );
   }
 }
