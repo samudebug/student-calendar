@@ -12,8 +12,8 @@ export class UsersController {
   }
 
   @Get('me/tasks')
-  getTasksFeed(@UserId() userId: string, @Query('afterDate') afterDate?: Date) {
-    return this.service.getTasksFeed(userId, afterDate);
+  getTasksFeed(@UserId() userId: string, @Query('afterDate') afterDate?: Date, @Query('page') page?: number) {
+    return this.service.getTasksFeed(userId, afterDate, page);
   }
   @Get('me')
   getMe(@UserId() userId: string): Promise<User> {

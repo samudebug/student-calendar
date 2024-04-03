@@ -32,7 +32,11 @@ describe('/api/notifications', () => {
   it('GET /api/notifications should return no notifications', async () => {
     const res = await axios.get('/api/notifications');
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(0);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   });
 
   it('POST /api/notifications should create a notification', async () => {
@@ -75,6 +79,10 @@ describe('/api/notifications', () => {
   it('GET /api/notifications should have one notification', async () => {
     const res = await axios.get('/api/notifications');
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(1);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   });
 });

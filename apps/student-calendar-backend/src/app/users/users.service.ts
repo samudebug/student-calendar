@@ -25,8 +25,8 @@ export class UsersService {
   }
 
 
-  async getTasksFeed(userId: string, afterDate?: Date) {
-    return this.taskService.getByUserId(userId, afterDate);
+  async getTasksFeed(userId: string, afterDate?: Date, page?: number) {
+    return this.taskService.getByUserId(userId, afterDate, page);
   }
 
 

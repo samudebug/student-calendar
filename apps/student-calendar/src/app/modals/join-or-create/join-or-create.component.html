@@ -1,19 +1,19 @@
-<div class="p-3 flex flex-col gap-y-2">
+<div class="p-3 flex flex-col gap-y-2 dark:text-white">
   <h2 mat-dialog-title>What do you want to do?</h2>
   <mat-dialog-content>
     <div class="flex flex-row gap-x-2 items-center">
-      <div (click)="onOpenJoin()" class="flex flex-col items-center justify-center p-5 hover:bg-zinc-300 transition rounded-md cursor-pointer">
-        <div class="text-[70px] w-[70px] h-[70px] leading-none">
-          <mat-icon class="text-zinc-800" [inline]="true">123</mat-icon>
+      <div (click)="onOpenJoin()" class="flex flex-col items-center justify-center p-5 hover:bg-zinc-300 hover:bg-zinc-600 transition rounded-md cursor-pointer">
+        <div class="text-[70px] w-[70px] h-[70px] leading-none ">
+          <mat-icon class="text-zinc-800 dark:text-white" [inline]="true">123</mat-icon>
         </div>
-        <span class="text-lg text-zinc-800 uppercase">Join with a code</span>
+        <span class="text-lg text-zinc-800 uppercase dark:text-white">Join with a code</span>
       </div>
       <span class="text-xl uppercase">Or</span>
-      <div (click)="onOpenCreate()" class="flex flex-col items-center justify-center p-5 hover:bg-zinc-300 transition rounded-md cursor-pointer">
+      <div (click)="onOpenCreate()" class="flex flex-col items-center justify-center p-5 hover:bg-zinc-300 hover:bg-zinc-600 transition rounded-md cursor-pointer">
         <div class="text-[70px] w-[70px] h-[70px] leading-none">
-          <mat-icon class="text-zinc-800" [inline]="true">add</mat-icon>
+          <mat-icon class="text-zinc-800 dark:text-white" [inline]="true">add</mat-icon>
         </div>
-        <span class="text-lg text-zinc-800 uppercase">Create a new class</span>
+        <span class="text-lg text-zinc-800 uppercase dark:text-white">Create a new class</span>
       </div>
     </div>
   </mat-dialog-content>

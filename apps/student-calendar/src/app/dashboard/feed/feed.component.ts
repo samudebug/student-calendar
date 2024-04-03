@@ -9,17 +9,19 @@ import { AuthService } from '../../services/auth/auth.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TaskFormComponent } from '../../modals/task-form/task-form.component';
 import { firstValueFrom } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, MatListModule, TaskElementComponent],
+  imports: [CommonModule, MatListModule, TaskElementComponent, MatProgressSpinnerModule],
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.css',
 })
 export class FeedComponent implements OnInit {
   mockDate = new Date();
   feed: { date: string, tasks: (Task & { student: Student, class: Class })[] }[] = [];
+  loading = true;
   constructor(private feedService: FeedService, private authService: AuthService, private dialog: MatDialog) {
 
   }
@@ -30,6 +32,7 @@ export class FeedComponent implements OnInit {
 
   async getFeed() {
     this.feed = await this.feedService.getFeed();
+    this.loading = false;
   }
 
   async openView(task: (Task & { student: Student, class: Class })) {

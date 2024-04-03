@@ -11,6 +11,7 @@ import { StudentsService } from '../students/students.service';
 import { differenceInHours, isSameDay, setHours, startOfHour } from 'date-fns';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersService } from '../users/users.service';
+import { PaginatedResult } from '../../models/paginatedResult';
 
 const MIN_TIME_FOR_NOTIFICATION = 12;
 @Injectable()
@@ -25,8 +26,9 @@ export class TasksService {
   async getByClass(
     classId: string,
     userId: string,
-    afterDate?: Date
-  ): Promise<Task[]> {
+    afterDate?: Date,
+    page?: number
+  ): Promise<PaginatedResult<Task>> {
     const currentClass = await this.classesService.getById(classId);
     if (!currentClass) throw new NotFoundException('Class does not exist');
     const isStudentInClass = currentClass.students.some(
@@ -34,7 +36,7 @@ export class TasksService {
     );
     if (!isStudentInClass)
       throw new UnauthorizedException('Student is not in class');
-    return this.repo.getTasksForClass(classId, afterDate);
+    return this.repo.getTasksForClass(classId, afterDate, page);
   }
 
   async getById(
@@ -206,7 +208,7 @@ export class TasksService {
     return this.repo.deleteById(id, student.id);
   }
 
-  async getByUserId(userId: string, afterDate?: Date) {
-    return this.repo.getByUserId(userId, afterDate);
+  async getByUserId(userId: string, afterDate?: Date, page?: number) {
+    return this.repo.getByUserId(userId, afterDate, page);
   }
 }

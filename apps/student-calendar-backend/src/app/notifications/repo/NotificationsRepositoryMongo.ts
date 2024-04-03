@@ -1,6 +1,7 @@
 import { Notification } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
 import { INotificationsRepository } from './INotificationsRepository';
+import { PaginatedResult } from '../../../models/paginatedResult';
 
 export class NotificationsRepositoryMongo implements INotificationsRepository {
   constructor(private prismaService: PrismaService) { }
@@ -19,11 +20,12 @@ export class NotificationsRepositoryMongo implements INotificationsRepository {
       },
     });
   }
-  getNotificationsForClasses(
+  async getNotificationsForClasses(
     userId: string,
-    afterDate?: Date
-  ): Promise<Notification[]> {
-    return this.prismaService.notification.findMany({
+    afterDate?: Date,
+    page = 1
+  ): Promise<PaginatedResult<Notification>> {
+    const total = await this.prismaService.notification.count({
       where: {
         class: {
           students: {
@@ -40,5 +42,29 @@ export class NotificationsRepositoryMongo implements INotificationsRepository {
         createdAt: 'desc',
       },
     });
+    const results = await this.prismaService.notification.findMany({
+      where: {
+        class: {
+          students: {
+            some: {
+              userId
+            }
+          }
+        },
+        createdAt: {
+          gte: afterDate,
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 30,
+      skip: (page - 1) * 30
+    });
+    return {
+      total,
+      results,
+      page
+    }
   }
 }

@@ -3,13 +3,14 @@ import { IClassesRepository } from './repository/IClassesRepository';
 import { Class, Student } from '@prisma/client';
 import * as crypto from 'crypto';
 import { auth } from 'firebase-admin';
+import { PaginatedResult } from '../../models/paginatedResult';
 
 @Injectable()
 export class ClassesService {
   constructor(private classesRepository: IClassesRepository) {}
 
-  async getByUser(createdBy: string): Promise<Class[]> {
-    return this.classesRepository.getByUser(createdBy);
+  async getByUser(createdBy: string, page?: number): Promise<PaginatedResult<Class>> {
+    return this.classesRepository.getByUser(createdBy, page);
   }
 
   async getById(id: string): Promise<Class & {students: Student[]}> {

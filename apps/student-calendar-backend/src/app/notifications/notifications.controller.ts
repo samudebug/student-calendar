@@ -18,7 +18,7 @@ export class NotificationsController {
 
   @Get('')
   @UseGuards(AuthGuard)
-  getNotifications(@UserId() userId: string, @Query('afterDate') afterDate: Date) {
-    return this.notificationsService.getNotificationsForClassesFromUser(userId, afterDate);
+  getNotifications(@UserId() userId: string, @Query('afterDate') afterDate: Date, @Query('page') page?: number) {
+    return this.notificationsService.getNotificationsForClassesFromUser(userId, afterDate, page);
   }
 }
