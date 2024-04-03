@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Task } from '@prisma/client';
 import { DeleteTaskComponent } from '../delete-task/delete-task.component';
+import { startOfDay } from 'date-fns';
 @Component({
   selector: 'app-task-form',
   standalone: true,
@@ -41,6 +42,7 @@ export class TaskFormComponent implements OnInit {
   });
   loading = false;
   isEditing = false;
+  minDate = startOfDay(new Date())
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<TaskFormComponent>,

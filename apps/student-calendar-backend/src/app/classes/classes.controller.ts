@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { UserId } from '../../decorators/userId.decorator';
 import { Class } from '@prisma/client';
 import { AuthGuard } from '../../guards/auth/auth.guard';
+import { CreateClassDTO } from './dto/create-class.dto';
+import { UpdateClassDTO } from './dto/update-class.dto';
 
 @Controller('classes')
 @UseGuards(AuthGuard)
@@ -27,11 +29,8 @@ export class ClassesController {
   @Post()
   add(
     @UserId() userId: string,
-    @Body()
-    newClass: Omit<
-      Class,
-      'id' | 'createdAt' | 'updatedAt' | 'code' | 'createdBy'
-    >
+    @Body(ValidationPipe)
+    newClass: CreateClassDTO
   ) {
     return this.classesService.add(userId, newClass);
   }
@@ -40,10 +39,8 @@ export class ClassesController {
   updateById(
     @Param('id') id: string,
     @UserId() userId: string,
-    @Body()
-    classToUpdate: Partial<
-      Omit<Class, 'id' | 'createdAt' | 'updatedAt' | 'code' | 'createdBy'>
-    >
+    @Body(ValidationPipe)
+    classToUpdate: UpdateClassDTO
   ) {
     return this.classesService.updateById(id, userId, classToUpdate);
   }

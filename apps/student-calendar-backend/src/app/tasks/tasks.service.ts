@@ -61,7 +61,7 @@ export class TasksService {
     userId: string,
     newTask: Omit<
       Task,
-      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'classId'
+      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'classId' | 'notificationsId'
     >
   ) {
     const currentClass = await this.classesService.getById(classId);

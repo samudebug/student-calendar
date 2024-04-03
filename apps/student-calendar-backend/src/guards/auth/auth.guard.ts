@@ -19,7 +19,6 @@ export class AuthGuard implements CanActivate {
     const decodedToken = await auth().verifyIdToken(token);
     if (decodedToken) {
       req.userId = decodedToken.uid;
-      console.log("Token authenticated");
       Logger.log("Token authenticated", "AuthGuard");
     }
     return !!decodedToken;

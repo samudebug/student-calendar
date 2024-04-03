@@ -93,6 +93,13 @@ describe('/api/classes', () => {
     expect(res.status).toBe(404);
   }, 60000);
 
+  it('PATCH /api/classes/:id should error out if with an invalid name', async () => {
+    const res = await axios.patch(`/api/classes/${createdClass.id}`, {
+      name: 123,
+    });
+    expect(res.status).toBe(400);
+  }, 60000);
+
   it('PATCH /api/classes/:id should error out if the user is not authorized', async () => {
     await signOut(auth);
     const altTestEmail = 'alt_test@email.com';
