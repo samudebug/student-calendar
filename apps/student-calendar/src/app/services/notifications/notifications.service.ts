@@ -20,7 +20,7 @@ export class NotificationsService {
     const pageToFetch = Math.min(this.totalPages, page ?? 1);
 
     const notifications = await this.api.get<PaginatedResult<Notification>>('/notifications', {params: {afterDate: afterDate.toISOString(), page: pageToFetch.toString()}});
-    this.totalPages = Math.ceil(notifications.total / 30);
+    this.totalPages = Math.max(1, Math.ceil(notifications.total / 30));
     const oldNotifs = this.notificationsSubject.value;
     this.notificationsSubject.next(oldNotifs.concat(notifications.results));
   }

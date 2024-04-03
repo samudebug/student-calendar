@@ -17,7 +17,7 @@ export class FeedService {
 
   constructor(private api: ApiService) {}
 
-  async getFeed(page?: number) {
+  async getFeed(page?: number, refresh?: boolean) {
     const afterDate = startOfDay(new Date());
     const pageToFetch = Math.min(this.totalPages, page ?? 1);
 
@@ -30,7 +30,6 @@ export class FeedService {
       },
     });
     this.totalPages = Math.max(1, Math.ceil(tasksFeed.total / 30));
-    console.log(tasksFeed);
     const newTasks = new Map<
       string,
       (Task & { student: Student; class: Class })[]
@@ -45,6 +44,9 @@ export class FeedService {
       }
       newTasks.set(key, [...newTasks.get(key)!, ...[task]]);
     });
+    if (refresh) {
+      this.feedSubject.next([]);
+    }
     const oldTasksArr = this.feedSubject.value;
     const oldTasks = this.arrayToMap(oldTasksArr);
     this.feedSubject.next(this.mapToArray(this.mergeMaps(oldTasks, newTasks)));
