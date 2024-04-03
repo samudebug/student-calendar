@@ -21,6 +21,7 @@ export class DashboardComponent implements OnInit {
   ) {
     router.events.forEach((event) => {
       if (event instanceof NavigationEnd) {
+        console.log("navigation end")
         const lastElement = event.url.split('/').pop();
         if (lastElement === 'feed') {
           this.shouldShowTabs = true;

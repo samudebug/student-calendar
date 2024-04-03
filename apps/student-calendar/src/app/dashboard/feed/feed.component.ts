@@ -10,32 +10,42 @@ import { MatDialog } from '@angular/material/dialog';
 import { TaskFormComponent } from '../../modals/task-form/task-form.component';
 import { firstValueFrom } from 'rxjs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @Component({
   selector: 'app-feed',
   standalone: true,
-  imports: [CommonModule, MatListModule, TaskElementComponent, MatProgressSpinnerModule],
+  imports: [
+    CommonModule,
+    MatListModule,
+    TaskElementComponent,
+    MatProgressSpinnerModule,
+    InfiniteScrollModule
+  ],
   templateUrl: './feed.component.html',
   styleUrl: './feed.component.css',
 })
 export class FeedComponent implements OnInit {
   mockDate = new Date();
-  feed: { date: string, tasks: (Task & { student: Student, class: Class })[] }[] = [];
+  feed$ = this.feedService.feed$;
   loading = true;
-  constructor(private feedService: FeedService, private authService: AuthService, private dialog: MatDialog) {
-
-  }
+  currentPage = 1;
+  constructor(
+    private feedService: FeedService,
+    private authService: AuthService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.getFeed();
   }
 
   async getFeed() {
-    this.feed = await this.feedService.getFeed();
+    await this.feedService.getFeed();
     this.loading = false;
   }
 
-  async openView(task: (Task & { student: Student, class: Class })) {
+  async openView(task: Task & { student: Student; class: Class }) {
     const currentUser = await firstValueFrom(this.authService.user$);
     this.dialog.open(TaskFormComponent, {
       panelClass: ['w-full', 'md:w-1/2'],
@@ -45,5 +55,18 @@ export class FeedComponent implements OnInit {
         canEditTask: task.student.userId === currentUser?.uid,
       },
     });
+  }
+
+  fetchNextPage() {
+    if (!this.loading) {
+      this.currentPage++;
+      if (this.currentPage <= this.feedService.totalPages) {
+        this.feedService.getFeed(this.currentPage);
+      }
+      this.currentPage = Math.min(
+        this.feedService.totalPages,
+        this.currentPage
+      );
+    }
   }
 }
