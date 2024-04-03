@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ClassesService } from './classes.service';
 import { UserId } from '../../decorators/userId.decorator';
 import { Class } from '@prisma/client';
@@ -10,8 +10,8 @@ export class ClassesController {
   constructor(private readonly classesService: ClassesService) {}
 
   @Get()
-  getByUser(@UserId() userId: string) {
-    return this.classesService.getByUser(userId);
+  getByUser(@UserId() userId: string, @Query('page') page?: number) {
+    return this.classesService.getByUser(userId, page);
   }
 
   @Get('invite/:code')

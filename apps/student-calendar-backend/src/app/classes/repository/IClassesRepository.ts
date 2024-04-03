@@ -1,7 +1,8 @@
 import { Class, Student } from "@prisma/client";
+import { PaginatedResult } from "../../../models/paginatedResult";
 
 export abstract class IClassesRepository {
-  abstract getByUser(createdBy: string): Promise<Class[]>;
+  abstract getByUser(createdBy: string, page?: number): Promise<PaginatedResult<Class>>;
   abstract getById(id: string): Promise<Class & {students: Student[]}>;
   abstract getByCode(code: string): Promise<Class & {students: Student[]}>;
   abstract addStudentToClass(classId: string, student: {userId: string, name: string, photoUrl: string});

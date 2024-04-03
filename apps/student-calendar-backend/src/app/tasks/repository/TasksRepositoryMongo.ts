@@ -1,11 +1,12 @@
 import { Class, Student, Task } from '@prisma/client';
 import { PrismaService } from '../../prisma.service';
 import { ITasksRepository } from './ITasksRepository';
+import { PaginatedResult } from "../../../models/paginatedResult";
 
 export class TasksRepositoryMongo implements ITasksRepository {
   constructor(private prismaService: PrismaService) {}
-  getTasksForClass(classId: string, afterDate?: Date): Promise<Task[]> {
-    return this.prismaService.task.findMany({
+  async getTasksForClass(classId: string, afterDate?: Date, page = 1): Promise<PaginatedResult<Task>> {
+    const total = await this.prismaService.task.count(({
       where: {
         classId,
         deliverDate: {
@@ -15,7 +16,25 @@ export class TasksRepositoryMongo implements ITasksRepository {
       orderBy: {
         deliverDate: 'asc',
       },
+    }));
+    const results = await this.prismaService.task.findMany({
+      where: {
+        classId,
+        deliverDate: {
+          gt: afterDate,
+        },
+      },
+      orderBy: {
+        deliverDate: 'asc',
+      },
+      take: 30,
+      skip: (page - 1) * 30
     });
+    return {
+      total,
+      results,
+      page
+    }
   }
   getById(id: string, classId: string): Promise<Task & { student: Student }> {
     return this.prismaService.task.findFirst({
@@ -59,27 +78,55 @@ export class TasksRepositoryMongo implements ITasksRepository {
     }));
   }
 
-  async getByUserId(userId: string, afterDate?: Date): Promise<(Task & { student: Student, class: Class })[]> {
-    return this.prismaService.task.findMany({
+  async getByUserId(
+    userId: string,
+    afterDate?: Date,
+    page = 1
+  ): Promise<PaginatedResult<(Task & { student: Student; class: Class })>> {
+    const total = await this.prismaService.task.count({
       where: {
         class: {
           students: {
             some: {
-              userId
-            }
-          }
+              userId,
+            },
+          },
         },
         deliverDate: {
-          gte: afterDate
-        }
+          gte: afterDate,
+        },
       },
       orderBy: {
-        deliverDate: 'desc'
+        deliverDate: 'desc',
+      },
+    })
+    const results = await this.prismaService.task.findMany({
+      where: {
+        class: {
+          students: {
+            some: {
+              userId,
+            },
+          },
+        },
+        deliverDate: {
+          gte: afterDate,
+        },
+      },
+      orderBy: {
+        deliverDate: 'desc',
       },
       include: {
         student: true,
-        class: true
-      }
+        class: true,
+      },
+      take: 30,
+      skip: (page - 1) * 30
     });
+    return {
+      total,
+      results,
+      page
+    }
   }
 }

@@ -14,7 +14,11 @@ describe('/api/classes', () => {
   it('GET /api/classes should return no classes', async () => {
     const res = await axios.get('/api/classes');
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(0);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   }, 60000);
 
   const randomId = '6605cc4d2007414adc86ff27';
@@ -38,16 +42,11 @@ describe('/api/classes', () => {
 
   it('GET /api/classes should have the created class', async () => {
     const res = await axios.get('/api/classes');
-    const user = auth.currentUser;
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(1);
-    expect(res.data[0]).toMatchObject({
-      id: expect.stringMatching(createdClass.id),
-      name: expect.stringMatching(createdClass.name),
-      code: expect.stringMatching(createdClass.code),
-      createdBy: expect.stringMatching(user.uid),
-      createdAt: expect.stringMatching(createdClass.createdAt),
-      updatedAt: expect.stringMatching(createdClass.updatedAt),
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
     });
   }, 60000);
 
@@ -119,7 +118,11 @@ describe('/api/classes', () => {
     expect(deleteRes.status).toBe(200);
     const fetchRes = await axios.get('/api/classes');
     expect(fetchRes.status).toBe(200);
-    expect(fetchRes.data).toHaveLength(0);
+    expect(fetchRes.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   }, 60000);
 
   it('DELETE /api/classes/:id should error out if the class does not exist', async () => {

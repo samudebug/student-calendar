@@ -53,8 +53,8 @@ export class NotificationsService {
     return this.repo.createNotification(notification);
   }
 
-  async getNotificationsForClassesFromUser(userId: string, afterDate?: Date) {
+  async getNotificationsForClassesFromUser(userId: string, afterDate?: Date, page?: number) {
 
-    return this.repo.getNotificationsForClasses(userId, afterDate);
+    return this.repo.getNotificationsForClasses(userId, afterDate, page);
   }
 }

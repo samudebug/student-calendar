@@ -13,7 +13,7 @@ import { TasksService } from './tasks.service';
 import { Student, Task } from '@prisma/client';
 import { UserId } from '../../decorators/userId.decorator';
 import { AuthGuard } from '../../guards/auth/auth.guard';
-import { ApiKeyGuard } from '../../guards/apiKey/apiKey.guard';
+import { PaginatedResult } from '../../models/paginatedResult';
 
 @Controller('classes/:classId/tasks')
 export class TasksController {
@@ -23,9 +23,10 @@ export class TasksController {
   async getByClass(
     @Param('classId') classId: string,
     @UserId() userId: string,
-    @Query('afterDate') afterDate?: Date
-  ): Promise<Task[]> {
-    return this.taskService.getByClass(classId, userId, afterDate);
+    @Query('afterDate') afterDate?: Date,
+    @Query('page') page?: number
+  ): Promise<PaginatedResult<Task>> {
+    return this.taskService.getByClass(classId, userId, afterDate, page);
   }
 
   @Get(':id')

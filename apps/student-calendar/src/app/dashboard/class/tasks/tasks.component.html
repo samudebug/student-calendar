@@ -10,7 +10,13 @@
       <mat-icon>add</mat-icon>
     </button>
   </div>
-  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+  <div
+    class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4"
+    infiniteScroll
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="500"
+    (scrolled)="fetchNextPage()"
+  >
     @for (task of (tasks$ | async); track task) {
     <app-task-element
       class="cursor-pointer"

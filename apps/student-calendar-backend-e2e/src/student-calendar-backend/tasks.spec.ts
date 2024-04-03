@@ -34,7 +34,11 @@ describe('/api/classes/:id/tasks', () => {
   it('GET /api/classes/:id/tasks should return no tasks', async () => {
     const res = await axios.get(`/api/classes/${classId}/tasks`);
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(0);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   }, 60000);
 
   it('GET /api/classes/:id/tasks should error out if the class does not exist', async () => {
@@ -98,7 +102,11 @@ describe('/api/classes/:id/tasks', () => {
   it('GET /api/classes/:id/tasks should return one task', async () => {
     const res = await axios.get(`/api/classes/${classId}/tasks`);
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(1);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   }, 60000);
 
   it('GET /api/classes/:id/tasks/:id should return the new task', async () => {
@@ -183,7 +191,11 @@ describe('/api/classes/:id/tasks', () => {
     expect(deleteRes.status).toBe(200);
     const fetchRes = await axios.get(`/api/classes/${classId}/tasks`);
     expect(fetchRes.status).toBe(200);
-    expect(fetchRes.data).toHaveLength(0);
+    expect(fetchRes.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
 
   }, 60000)
 });

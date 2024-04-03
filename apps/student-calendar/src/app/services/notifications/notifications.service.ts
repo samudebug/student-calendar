@@ -3,6 +3,7 @@ import { ApiService } from '../api/api.service';
 import { startOfDay } from 'date-fns';
 import { BehaviorSubject } from 'rxjs';
 import { Notification } from '@prisma/client';
+import { PaginatedResult } from '../../models/paginatedResult';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,17 @@ import { Notification } from '@prisma/client';
 export class NotificationsService {
   notificationsSubject = new BehaviorSubject<Notification[]>([]);
   notifications$ = this.notificationsSubject.asObservable();
+  totalPages = 1;
+
   constructor(private api: ApiService) { }
 
-  async getNotifications() {
+  async getNotifications(page?: number) {
     const afterDate = startOfDay(new Date());
-    const notifications = await this.api.get<Notification[]>('/notifications', {params: {afterDate: afterDate.toISOString()}});
-    this.notificationsSubject.next(notifications);
+    const pageToFetch = Math.min(this.totalPages, page ?? 1);
+
+    const notifications = await this.api.get<PaginatedResult<Notification>>('/notifications', {params: {afterDate: afterDate.toISOString(), page: pageToFetch.toString()}});
+    this.totalPages = Math.max(1, Math.ceil(notifications.total / 30));
+    const oldNotifs = this.notificationsSubject.value;
+    this.notificationsSubject.next(oldNotifs.concat(notifications.results));
   }
 }

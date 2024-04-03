@@ -62,7 +62,11 @@ describe('/api/users', () => {
   it('GET /api/users/me/tasks should return no tasks', async () => {
     const res = await axios.get('/api/users/me/tasks');
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(0);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   });
 
   it('GET /api/users/me/tasks should return one task after creating', async () => {
@@ -74,6 +78,10 @@ describe('/api/users', () => {
     await axios.post(`/api/classes/${classId}/tasks`, newTask);
     const res = await axios.get('/api/users/me/tasks');
     expect(res.status).toBe(200);
-    expect(res.data).toHaveLength(1);
+    expect(res.data).toMatchObject({
+      total: expect.any(Number),
+      page: expect.any(Number),
+      results: expect.any(Array)
+    });
   })
 });

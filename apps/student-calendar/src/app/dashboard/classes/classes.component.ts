@@ -11,6 +11,7 @@ import { CreateClassComponent } from '../../modals/create-class/create-class.com
 import { RouterModule } from '@angular/router';
 import { JoinOrCreateComponent } from '../../modals/join-or-create/join-or-create.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 @Component({
   selector: 'app-classes',
@@ -25,6 +26,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatDialogModule,
     MatTooltipModule,
+    InfiniteScrollModule
   ],
   templateUrl: './classes.component.html',
   styleUrl: './classes.component.css',
@@ -32,15 +34,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 export class ClassesComponent implements OnInit {
   loading = true;
   classes$ = this.classesService.classes$;
+  currentPage = 1;
   constructor(
     private classesService: ClassesService,
     private dialog: MatDialog
   ) {}
   ngOnInit(): void {
-    this.classesService.getClasses().then(() => (this.loading = false));
+    this.classesService.getClasses(this.currentPage, true).then(() => (this.loading = false));
   }
 
   openJoinOrCreateClass() {
     this.dialog.open(JoinOrCreateComponent);
+  }
+
+  fetchNextPage() {
+    this.currentPage++;
+    if (this.currentPage <= this.classesService.totalPages) {
+
+      this.classesService.getClasses(this.currentPage);
+    }
+    this.currentPage = Math.min(this.classesService.totalPages, this.currentPage);
   }
 }

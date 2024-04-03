@@ -10,6 +10,7 @@ import { TaskFormComponent } from '../../../modals/task-form/task-form.component
 import { Task } from '@prisma/client';
 import { AuthService } from '../../../services/auth/auth.service';
 import { firstValueFrom } from 'rxjs';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 @Component({
   selector: 'app-tasks',
@@ -20,6 +21,7 @@ import { firstValueFrom } from 'rxjs';
     MatIconModule,
     MatTooltipModule,
     TaskElementComponent,
+    InfiniteScrollModule
   ],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.css',
@@ -29,6 +31,7 @@ export class TasksComponent implements OnInit {
   classId: string;
 
   tasks$ = this.tasksService.tasks$;
+  currentPage = 1;
 
   constructor(
     private tasksService: TasksService,
@@ -37,7 +40,7 @@ export class TasksComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.tasksService.getTasks(this.classId);
+    this.tasksService.getTasks(this.classId, this.currentPage, true);
   }
 
   openCreate() {
@@ -58,5 +61,14 @@ export class TasksComponent implements OnInit {
         canEditTask: currentTask.student.userId === currentUser?.uid,
       },
     });
+  }
+
+  fetchNextPage() {
+    this.currentPage++;
+    if (this.currentPage <= this.tasksService.totalPages) {
+
+      this.tasksService.getTasks(this.classId, this.currentPage);
+    }
+    this.currentPage = Math.min(this.tasksService.totalPages, this.currentPage);
   }
 }
