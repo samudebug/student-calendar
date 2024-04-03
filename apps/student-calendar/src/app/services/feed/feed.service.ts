@@ -92,29 +92,23 @@ export class FeedService {
     map1.forEach((value, key) => {
       result.set(key, value);
     });
-    console.log("map1", map1);
-    console.log("map2", map2);
 
-    console.log("result", result);
 
     result.forEach((value, key, map) => {
       // if map2 has the same key as map 1, merge both
       if (map2.has(key)) {
-        console.log("map2 has key")
         const oldArr = value;
         map.set(key, [...oldArr, ...map2.get(key)!]);
         map2.delete(key);
       }
     });
     // if map2 has keys not added to 1, add now
-    console.log("map2.keys.length", [...map2.keys()].length);
 
     if ([...map2.keys()].length > 0) {
       map2.forEach((value, key) => {
         result.set(key, value);
       });
     }
-    console.log("merge result", result);
     return result;
   }
 }

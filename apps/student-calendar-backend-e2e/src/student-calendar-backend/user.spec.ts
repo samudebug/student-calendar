@@ -44,6 +44,12 @@ describe('/api/users', () => {
     });
   }, 60000);
 
+  it('PATCH /api/users/me should error if the validation fails', async () => {
+    const res = await axios.patch('/api/users/me', { name: 123 });
+    const user = auth.currentUser;
+    expect(res.status).toBe(400);
+  })
+
   it('GET /api/users/me should return info about the current user', async () => {
     const res = await axios.get('/api/users/me');
     const user = auth.currentUser;

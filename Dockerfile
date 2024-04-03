@@ -7,6 +7,7 @@ RUN npm install
 COPY . .
 COPY prisma ./prisma/
 RUN npx prisma generate
+RUN nx reset
 RUN npm run build:backend
 
 FROM node:lts-alpine as runtime

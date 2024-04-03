@@ -156,6 +156,14 @@ describe('/api/classes/:id/tasks', () => {
     expect(res.status).toBe(404);
   }, 60000);
 
+  it('PATCH /api/classes/:id/tasks/:id should error out if the validation files', async () => {
+    const res = await axios.patch(
+      `/api/classes/${classId}/tasks/${createdTask.id}`,
+      { name: 123 }
+    );
+    expect(res.status).toBe(400);
+  }, 60000);
+
   it('PATCH /api/classes/:id/tasks/:id should error out if the user updating the task is not the creator', async () => {
     await signOut(auth);
     const altTestEmail = 'alt_test@email.com';

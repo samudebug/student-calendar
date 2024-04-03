@@ -8,12 +8,15 @@ import {
   Post,
   Query,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Student, Task } from '@prisma/client';
 import { UserId } from '../../decorators/userId.decorator';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { PaginatedResult } from '../../models/paginatedResult';
+import { CreateTaskDTO } from './dto/create-task.dto';
+import { UpdateTaskDTO } from './dto/update-task.dto';
 
 @Controller('classes/:classId/tasks')
 export class TasksController {
@@ -44,11 +47,8 @@ export class TasksController {
   async create(
     @Param('classId') classId: string,
     @UserId() userId: string,
-    @Body()
-    newTask: Omit<
-      Task,
-      'id' | 'createdAt' | 'updatedAt' | 'createdBy' | 'classId'
-    >
+    @Body(ValidationPipe)
+    newTask: CreateTaskDTO
   ): Promise<Task> {
     return this.taskService.add(classId, userId, newTask);
   }
@@ -59,10 +59,8 @@ export class TasksController {
     @Param('id') id: string,
     @Param('classId') classId: string,
     @UserId() userId: string,
-    @Body()
-    taskToUpdate: Partial<
-      Omit<Task, 'id' | 'createdBy' | 'classId' | 'createdAt' | 'updatedAt'>
-    >
+    @Body(ValidationPipe)
+    taskToUpdate: UpdateTaskDTO
   ): Promise<Task> {
     return this.taskService.update(id, classId, userId, taskToUpdate);
   }

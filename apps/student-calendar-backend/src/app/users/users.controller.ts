@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Query, UseGuards, ValidationPipe } from '@nestjs/common';
 import { AuthGuard } from '../../guards/auth/auth.guard';
 import { UsersService } from './users.service';
 import { UserId } from '../../decorators/userId.decorator';
 import { User } from '@prisma/client';
+import { UpdateUserDTO } from './dto/update-user.dto';
 
 @Controller('users')
 @UseGuards(AuthGuard)
@@ -22,7 +23,7 @@ export class UsersController {
 
 
   @Patch('me')
-  updateMe(@UserId() userId: string, @Body() user: Partial<Omit<User, 'id' | 'userId' | 'createdAt' | 'updatedAt'>>): Promise<User> {
+  updateMe(@UserId() userId: string, @Body(ValidationPipe) user: UpdateUserDTO): Promise<User> {
     return this.service.createOrUpdateUser(userId,  user);
   }
 }

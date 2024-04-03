@@ -29,6 +29,8 @@
     "@nx/angular": "18.1.1",
     "@prisma/client": "^5.11.0",
     "axios": "^1.6.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "firebase": "^10.9.0",
