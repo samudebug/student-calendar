@@ -114,7 +114,7 @@ export class TasksRepositoryMongo implements ITasksRepository {
         },
       },
       orderBy: {
-        deliverDate: 'desc',
+        deliverDate: 'asc',
       },
       include: {
         student: true,
