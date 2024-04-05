@@ -19,7 +19,6 @@ export class CloudTasksRepo {
 
     const parent = this.client.queuePath(project, location, queue);
     Logger.log(`Scheduling notification for ${scheduleTime}`, 'CloudTasks');
-    Logger.log(`Time for schedule in seconds ${inSeconds}`, 'CloudTasks')
     const [response] = await this.client.createTask({
       parent,
       task: {
@@ -29,6 +28,7 @@ export class CloudTasksRepo {
         httpRequest: {
           headers: {
             'Content-Type': 'application/json',
+            'X-Api-Key': Buffer.from(process.env.API_KEY).toString("base64")
           },
           httpMethod: 'POST',
           url,
@@ -43,6 +43,6 @@ export class CloudTasksRepo {
 
   async deleteTask(name: string) {
     Logger.log(`Deleting Cloud Task ${name}`, 'CloudTasks')
-    await this.client.deleteTask({name});
+    await this.client.deleteTask({ name });
   }
 }
