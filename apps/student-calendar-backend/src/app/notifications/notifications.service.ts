@@ -33,22 +33,15 @@ export class NotificationsService {
       if (!currentClass) throw new NotFoundException('Class does not exist');
     }
     if (process.env.NODE_ENV !== 'test') {
-      const students = await this.studentService.getStudentsByClassId(
-        notification.classId
-      );
-      await Promise.all(
-        students.map(async (student) => {
-          try {
-            this.notificationRepo.sendNotification(student.user.fcmToken, {
-              title: notification.title,
-              body: notification.body,
-              data: notification.data,
-            });
-          } catch (error) {
-            Logger.error(error);
-          }
-        })
-      );
+      try {
+        await this.notificationRepo.sendNotification(`classes/${notification.classId}`, {
+          title: notification.title,
+          body: notification.body,
+          data: notification.data,
+        });
+      } catch (error) {
+        Logger.error(error);
+      }
     }
     return this.repo.createNotification(notification);
   }
