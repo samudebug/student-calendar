@@ -23,7 +23,7 @@ export class CloudTasksRepo {
       parent,
       task: {
         scheduleTime: {
-          seconds: inSeconds,
+          seconds: inSeconds + Date.now() / 1000,
         },
         httpRequest: {
           headers: {
@@ -36,7 +36,6 @@ export class CloudTasksRepo {
         },
       },
     });
-
 
     return response.name;
   }

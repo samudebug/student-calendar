@@ -8,12 +8,12 @@ import { ITasksRepository } from './repository/ITasksRepository';
 import { Student, Task } from '@prisma/client';
 import { ClassesService } from '../classes/classes.service';
 import { StudentsService } from '../students/students.service';
-import { differenceInHours, isSameDay, setHours, startOfHour } from 'date-fns';
+import { differenceInCalendarDays, differenceInHours, isSameDay, setHours, startOfHour } from 'date-fns';
 import { NotificationsService } from '../notifications/notifications.service';
 import { UsersService } from '../users/users.service';
 import { PaginatedResult } from '../../models/paginatedResult';
 
-const MIN_TIME_FOR_NOTIFICATION = 12;
+const MIN_TIME_FOR_NOTIFICATION = 1;
 @Injectable()
 export class TasksService {
   constructor(
@@ -21,7 +21,7 @@ export class TasksService {
     private classesService: ClassesService,
     private studentService: StudentsService,
     private notificationService: NotificationsService
-  ) {}
+  ) { }
 
   async getByClass(
     classId: string,
@@ -78,10 +78,10 @@ export class TasksService {
       createdBy: student.id,
     });
     if (process.env.NODE_ENV !== 'test') {
-      const notificationDate = startOfHour(setHours(newTask.deliverDate, 8));
 
+      const notificationDate = new Date(newTask.deliverDate);
       if (
-        differenceInHours(notificationDate, new Date()) >=
+        differenceInCalendarDays(notificationDate, new Date()) >=
         MIN_TIME_FOR_NOTIFICATION
       ) {
         const notificationId =
@@ -147,12 +147,10 @@ export class TasksService {
               }
             })
           );
-          const notificationDate = startOfHour(
-            setHours(taskToUpdate.deliverDate, 8)
-          );
+          const notificationDate = new Date(taskToUpdate.deliverDate);
           notificationsId = [];
           if (
-            differenceInHours(notificationDate, new Date()) >=
+            differenceInCalendarDays(notificationDate, new Date()) >=
             MIN_TIME_FOR_NOTIFICATION
           ) {
             try {
@@ -161,9 +159,8 @@ export class TasksService {
                   `/notifications/`,
                   {
                     title: 'Task coming up',
-                    body: `The task ${
-                      taskToUpdate.name ?? currentTask.name
-                    } is scheduled to today`,
+                    body: `The task ${taskToUpdate.name ?? currentTask.name
+                      } is scheduled to today`,
                     data: JSON.stringify({
                       taskId: id,
                     }),

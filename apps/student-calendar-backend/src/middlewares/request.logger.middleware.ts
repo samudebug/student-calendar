@@ -10,7 +10,8 @@ export class LoggerMiddleware implements NestMiddleware {
       method: req.method,
       originalUrl: req.originalUrl,
       params: req.params,
-      query: req.query
+      query: req.query,
+      body: req.body
     })}`);
     // Ends middleware function execution, hence allowing to move on
     if (next) {
