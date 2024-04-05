@@ -33,24 +33,21 @@ export class NotificationsService {
       if (!currentClass) throw new NotFoundException('Class does not exist');
     }
     if (process.env.NODE_ENV !== 'test') {
-      const students = await this.studentService.getStudentsByClassId(
-        notification.classId
-      );
-      await Promise.all(
-        students.map(async (student) => {
-          try {
-            this.notificationRepo.sendNotification(student.user.fcmToken, {
-              title: notification.title,
-              body: notification.body,
-              data: notification.data,
-            });
-          } catch (error) {
-            Logger.error(error);
-          }
-        })
-      );
+      try {
+        await this.notificationRepo.sendNotificationToTopic(`classes-${notification.classId}`, {
+          title: notification.title,
+          body: notification.body,
+          data: notification.data,
+        });
+      } catch (error) {
+        Logger.error(error);
+      }
     }
     return this.repo.createNotification(notification);
+  }
+
+  async subscribeToTopic(token: string, topic: string) {
+    return this.notificationRepo.subscribeToTopic(token, topic);
   }
 
   async getNotificationsForClassesFromUser(userId: string, afterDate?: Date, page?: number) {

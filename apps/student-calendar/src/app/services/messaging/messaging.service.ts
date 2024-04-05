@@ -23,4 +23,5 @@ export class MessagingService {
     if (this.hasPermission) return getToken(this.messaging, { vapidKey: environment.vapidKey });
     return;
   }
+
 }
