@@ -5,9 +5,11 @@ import { PrismaService } from '../prisma.service';
 import { IUsersRepository } from './repository/IUsersRepository';
 import { UsersRepositoryMongo } from './repository/UsersRepositoryMongo';
 import { TasksModule } from '../tasks/tasks.module';
+import { ClassesModule } from '../classes/classes.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [forwardRef(() => TasksModule)],
+  imports: [forwardRef(() => TasksModule), ClassesModule, NotificationsModule],
   providers: [
     UsersService,
     PrismaService,
@@ -21,4 +23,4 @@ import { TasksModule } from '../tasks/tasks.module';
   controllers: [UsersController],
   exports: [UsersService]
 })
-export class UsersModule {}
+export class UsersModule { }

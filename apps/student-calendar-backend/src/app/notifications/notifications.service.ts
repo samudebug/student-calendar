@@ -34,7 +34,7 @@ export class NotificationsService {
     }
     if (process.env.NODE_ENV !== 'test') {
       try {
-        await this.notificationRepo.sendNotification(`classes/${notification.classId}`, {
+        await this.notificationRepo.sendNotificationToTopic(`classes-${notification.classId}`, {
           title: notification.title,
           body: notification.body,
           data: notification.data,
@@ -44,6 +44,10 @@ export class NotificationsService {
       }
     }
     return this.repo.createNotification(notification);
+  }
+
+  async subscribeToTopic(token: string, topic: string) {
+    return this.notificationRepo.subscribeToTopic(token, topic);
   }
 
   async getNotificationsForClassesFromUser(userId: string, afterDate?: Date, page?: number) {
